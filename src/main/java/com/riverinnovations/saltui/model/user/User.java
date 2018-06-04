@@ -1,5 +1,10 @@
 package com.riverinnovations.saltui.model.user;
 
+import org.apache.commons.beanutils.BeanMap;
+import org.apache.commons.beanutils.BeanUtils;
+
+import java.util.Map;
+
 /**
  * Class models a User who is to be granted logon permissions to a system managed by SaltStack.
  *
@@ -88,4 +93,240 @@ public class User {
     /** Brief description of the users account (can be null) (Windows only) */
     private String winDescription;
 
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
+    public String getPasswordPlain() {
+        return passwordPlain;
+    }
+
+    public void setPasswordPlain(String passwordPlain) {
+        this.passwordPlain = passwordPlain;
+    }
+
+    public boolean isHashPassword() {
+        return hashPassword;
+    }
+
+    public void setHashPassword(boolean hashPassword) {
+        this.hashPassword = hashPassword;
+    }
+
+    public boolean isEnforcePassword() {
+        return enforcePassword;
+    }
+
+    public void setEnforcePassword(boolean enforcePassword) {
+        this.enforcePassword = enforcePassword;
+    }
+
+    public String getShell() {
+        return shell;
+    }
+
+    public void setShell(String shell) {
+        this.shell = shell;
+    }
+
+    public String getHome() {
+        return home;
+    }
+
+    public void setHome(String home) {
+        this.home = home;
+    }
+
+    public boolean isCreateHome() {
+        return createHome;
+    }
+
+    public void setCreateHome(boolean createHome) {
+        this.createHome = createHome;
+    }
+
+    public Integer getUid() {
+        return uid;
+    }
+
+    public void setUid(Integer uid) {
+        this.uid = uid;
+    }
+
+    public boolean isSystem() {
+        return system;
+    }
+
+    public void setSystem(boolean system) {
+        this.system = system;
+    }
+
+    public Integer getGid() {
+        return gid;
+    }
+
+    public void setGid(Integer gid) {
+        this.gid = gid;
+    }
+
+    public boolean isGidFromName() {
+        return gidFromName;
+    }
+
+    public void setGidFromName(boolean gidFromName) {
+        this.gidFromName = gidFromName;
+    }
+
+    public String getGecosFullname() {
+        return gecosFullname;
+    }
+
+    public void setGecosFullname(String gecosFullname) {
+        this.gecosFullname = gecosFullname;
+    }
+
+    public String getGecosRoomNumber() {
+        return gecosRoomNumber;
+    }
+
+    public void setGecosRoomNumber(String gecosRoomNumber) {
+        this.gecosRoomNumber = gecosRoomNumber;
+    }
+
+    public String getGecosWorkphone() {
+        return gecosWorkphone;
+    }
+
+    public void setGecosWorkphone(String gecosWorkphone) {
+        this.gecosWorkphone = gecosWorkphone;
+    }
+
+    public String getGecosHomephone() {
+        return gecosHomephone;
+    }
+
+    public void setGecosHomephone(String gecosHomephone) {
+        this.gecosHomephone = gecosHomephone;
+    }
+
+    public String getGecosOther() {
+        return gecosOther;
+    }
+
+    public void setGecosOther(String gecosOther) {
+        this.gecosOther = gecosOther;
+    }
+
+    public Integer getDateLastPasswordChange() {
+        return dateLastPasswordChange;
+    }
+
+    public void setDateLastPasswordChange(Integer dateLastPasswordChange) {
+        this.dateLastPasswordChange = dateLastPasswordChange;
+    }
+
+    public Integer getMinDaysBetweenPasswordChanges() {
+        return minDaysBetweenPasswordChanges;
+    }
+
+    public void setMinDaysBetweenPasswordChanges(Integer minDaysBetweenPasswordChanges) {
+        this.minDaysBetweenPasswordChanges = minDaysBetweenPasswordChanges;
+    }
+
+    public Integer getMaxDaysBetweenPasswordChanges() {
+        return maxDaysBetweenPasswordChanges;
+    }
+
+    public void setMaxDaysBetweenPasswordChanges(Integer maxDaysBetweenPasswordChanges) {
+        this.maxDaysBetweenPasswordChanges = maxDaysBetweenPasswordChanges;
+    }
+
+    public Integer getInactDaysBeforeLocked() {
+        return inactDaysBeforeLocked;
+    }
+
+    public void setInactDaysBeforeLocked(Integer inactDaysBeforeLocked) {
+        this.inactDaysBeforeLocked = inactDaysBeforeLocked;
+    }
+
+    public Integer getWarnDaysBeforeMaxDaysBetweenPasswordChanges() {
+        return warnDaysBeforeMaxDaysBetweenPasswordChanges;
+    }
+
+    public void setWarnDaysBeforeMaxDaysBetweenPasswordChanges(Integer warnDaysBeforeMaxDaysBetweenPasswordChanges) {
+        this.warnDaysBeforeMaxDaysBetweenPasswordChanges = warnDaysBeforeMaxDaysBetweenPasswordChanges;
+    }
+
+    public Integer getDateExpire() {
+        return dateExpire;
+    }
+
+    public void setDateExpire(Integer dateExpire) {
+        this.dateExpire = dateExpire;
+    }
+
+    public String getWinHomedrive() {
+        return winHomedrive;
+    }
+
+    public void setWinHomedrive(String winHomedrive) {
+        this.winHomedrive = winHomedrive;
+    }
+
+    public String getWinProfile() {
+        return winProfile;
+    }
+
+    public void setWinProfile(String winProfile) {
+        this.winProfile = winProfile;
+    }
+
+    public String getWinLogonscript() {
+        return winLogonscript;
+    }
+
+    public void setWinLogonscript(String winLogonscript) {
+        this.winLogonscript = winLogonscript;
+    }
+
+    public String getWinDescription() {
+        return winDescription;
+    }
+
+    public void setWinDescription(String winDescription) {
+        this.winDescription = winDescription;
+    }
+
+    /**
+     * Converts the contents into a map.
+     * @return The map of bean properties
+     */
+    public Map toMap() throws Exception {
+        Map<String, String> map = BeanUtils.describe(this);
+        //BeanMap map = new BeanMap(this);
+        map.remove("class");
+        return map;
+    }
+
+    /**
+     * Constructs a bean from the contents of a map.
+     */
+    public static User fromMap(Map<String, String> map) throws Exception {
+        User user = new User();
+        BeanUtils.populate(user, map);
+        return user;
+    }
 }
