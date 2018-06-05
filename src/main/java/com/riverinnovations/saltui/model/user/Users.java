@@ -43,6 +43,13 @@ public class Users {
     }
 
     /**
+     * Returns all the users.
+     */
+    public Collection<User> getUsers() {
+        return this.userMap.values();
+    }
+
+    /**
      * Returns all the users in a structure suitable for conversion to YAML.
      * @return All the users as a structure of maps.
      */

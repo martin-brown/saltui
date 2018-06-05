@@ -12,6 +12,43 @@ same username and password.
 password via a web UI.
 * Password expiry. Some standards, such as PCI-DSS require that passwords
 expire every 90 days. 
+* Secure password encryption. 
+
+## Objective
+This application will manage a [Pillar](https://docs.saltstack.com/en/latest/topics/pillar/index.html) 
+file; format TBD, but possibly something like this:
+```yaml
+users:
+    one:
+        gidFromName: false
+        gecosFullname: The first user
+        system: false
+        enforcePassword: true
+        hashPassword: false
+        name: one
+        createHome: true
+        passwordPlain: secret1
+    two:
+        gidFromName: false
+        gecosFullname: The second user
+        system: false
+        enforcePassword: true
+        hashPassword: false
+        name: two
+        createHome: true
+        passwordPlain: secret2
+```
+
+The Pillar file can then be pulled into Salt State using something like this (untested):
+```yaml
+{% for user in pillar.get('users').items() %}
+{{user}}:
+  user.present:
+    - uid: {{user.uid}}
+    - gid: {{user.gid}}
+    - shell: {{user.shell}}
+{% endfor %}
+``` 
 
 Platform
 ========
