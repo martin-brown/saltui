@@ -26,6 +26,7 @@ public class ModelTest {
         two.setName("two");
         two.setGecosFullname("The second user");
         two.setPasswordPlain("secret2");
+        two.setAbsentForce(true);
 
         Users users = new Users();
         users.addUser(one);
@@ -43,7 +44,7 @@ public class ModelTest {
             if (usersEntry.getValue() instanceof Map) {
                 for (Map.Entry<String, Map<String, Object>> userEntry: ((Map<String, Map<String, Object>>)usersEntry.getValue()).entrySet()) {
                     System.err.println("User " + userEntry.getKey() + " => " + userEntry.getValue());
-                    User user = User.fromMap(userEntry.getValue());
+                    //User user = User.fromMap(userEntry.getValue());
                 }
             }
         }

@@ -54,14 +54,15 @@ public class Users {
      * @return All the users as a structure of maps.
      */
     public Map<String, Map<String, Map<String, Object>>> getYamlUsers() throws Exception {
-        Map<String, Map<String, Map<String, Object>>> usersMaps = new HashMap<>();
-        Map<String, Map<String, Object>> userMaps = new HashMap<>();
-        usersMaps.put("users", userMaps);
+        Map<String, Map<String, Map<String, Object>>> usersMap = new HashMap<>();
+
         for (User u: this.userMap.values()) {
             LOGGER.info("Returning user " + u.getName() + " in user maps");
-            userMaps.put(u.getName(), u.toMap());
+            User.YamlEntries userYamlEntries = u.toStateMap();
+            usersMap.put("saltui-users-" + u.getName(), userYamlEntries.getStateMap());
+            usersMap.put("saltui-unop-" + u.getName(), userYamlEntries.getNopMap());
         }
-        return usersMaps;
+        return usersMap;
     }
 
     /**

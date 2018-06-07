@@ -60,6 +60,9 @@ public class UserPillar {
         dumperOptions.setIndent(4);
         dumperOptions.setSplitLines(false);
         dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        dumperOptions.setDefaultScalarStyle(DumperOptions.ScalarStyle.SINGLE_QUOTED);
+        // TODO - always quote strings to avoid parsing numeric data incorrectly!
+
         Yaml yaml = new Yaml(dumperOptions);
         try (Writer w = Files.newBufferedWriter(yamlFilePath,
                 StandardCharsets.UTF_8,

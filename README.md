@@ -14,41 +14,103 @@ password via a web UI.
 expire every 90 days. 
 * Secure password encryption. 
 
+## TODO
+* Salt makes non-YAML demands of the YAML files - particularly when Jinja templates are to be used.
+  This means we need our own YAML generator and parser. Can be a subset of full functionality
+  as we will have full control over the files.
+* Need to tighten up User object construction so required properties are always present.
+* Need to tighten up Users object so User.name is always unique.
+* Proper unit testing.
+* Store all user data in a pillar file rather than a test.nop field in the state file.
+
 ## Objective
-This application will manage a [Pillar](https://docs.saltstack.com/en/latest/topics/pillar/index.html) 
+This application will manage a [Salt State file](https://docs.saltstack.com/en/latest/topics/tutorials/starting_states.html) 
 file; format TBD, but possibly something like this:
 ```yaml
-users:
-    one:
-        gidFromName: false
-        gecosFullname: The first user
+saltui-groups-alpha:
+    group.present:
+        name: alpha
         system: false
-        enforcePassword: true
-        hashPassword: false
-        name: one
-        createHome: true
-        passwordPlain: secret1
-    two:
-        gidFromName: false
-        gecosFullname: The second user
+        
+saltui-groups-beta:
+    group.present:
+        name: beta
         system: false
-        enforcePassword: true
-        hashPassword: false
+        
+saltui-groups-gamma:
+    group.absent:
+        name: gamma    
+        
+saltui-users-two:
+    user.present:
+        gidFromName: false
+        fullname: The second user
+        system: false
+        enforce_password: true
+        hash_password: false
         name: two
-        createHome: true
-        passwordPlain: secret2
+        createhome: true
+        password: {{ pillar['users']['two']['password'] }}
+        groups: 
+          - alpha
+          - beta
+        
+saltui-users-one:
+    user.present:
+        gidFromName: false
+        fullname: The first user
+        system: false
+        enforce_password: true
+        hash_password: false
+        name: one
+        createhome: true
+        password: {{ pillar['users']['two']['password'] }}
+        
+saltui-users-three:
+    user.absent:
+        name: three
+        purge: true
+        force: true
 ```
 
-The Pillar file can then be pulled into Salt State using something like this (untested):
-```yaml
-{% for user in pillar.get('users').items() %}
-{{user}}:
-  user.present:
-    - uid: {{user.uid}}
-    - gid: {{user.gid}}
-    - shell: {{user.shell}}
-{% endfor %}
-``` 
+This will create users 'one' and 'two', while deleting the account and all the files of user 'three'.
+
+Group membership can be done in two places:
+* Groups can have members, in which case the users need to be defined before the groups; or
+* Users can have a list of groups they are members of, in which case the groups need to be defined before the users.
+
+Note that UNIX groups cannot be members of another group, so in general this won't be supported. 
+
+The application will use [Salt Encryption](https://docs.saltstack.com/en/latest/topics/pillar/index.html#pillar-encryption)
+to encrypt the passwords stored in the pillar. If Windows clients are to be supported then it will be necessary to keep 
+the passwords in (encrypted) plain text and set `hash_password: false`; otherwise the passwords can be the unix password 
+hash value for extra security.
+
+Regarding deleting users and purging their files:
+* Need to test this to see what it does on various platforms.
+* Even if a user cannot log in via /etc/password it may be possible for them to gain access through other mechansims,
+for example SSH keys. Hence purging all their files may be more secure. Possibly platform dependent.
+
+# Initial Aims
+Provide a user interface that makes the basic SaltStack functionality available through a couple of user-interfaces:
+* Administrator UI where the administrator can create and manage accounts;
+* User UI where each user can reset their password and set certain properties; e.g. their full name, office, phone number etc.
+* Button to trigger `state.apply` and monitor the results.
+
+# Application Level Functionality
+There are some items of functionality that would need to be provided by the application as an 
+extension to SaltStack and the underlying minion OSs.
+
+## UID and GID
+Ensure these are consistent across all minions for easier file transfer and less confusion.
+
+## Adding User to Group for time limited period
+Sometimes it is desirable to give users access to a group for a few hours; for example for customer support.
+
+## Model Groups of Groups
+It can be useful to be able to make groups of users members of other groups. This could be done
+by adding virtual groups within the application, resolving the membership when creating the 
+YAML .sls file.
 
 Platform
 ========
