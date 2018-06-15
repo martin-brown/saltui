@@ -663,55 +663,55 @@ public class User {
      * @return A map containing all the data to be used when serializing
      *         to disk.
      */
-    public @NonNull List<Map<String, Object>>  toPillarMap() {
-        List<Map<String, Object>> pillarSeq = new ArrayList<>();
+    public @NonNull Map<String, Object>  toPillarMap() {
+        Map<String, Object> pillarMap = new HashMap<>();
 
-        this.addProperty(pillarSeq, NAME, this.name);
+        pillarMap.put(NAME, this.name);
 
         // UID and GID handling
-        this.addIfNotNull(pillarSeq, UID, this.uid);
-        this.addIfNotNull(pillarSeq, GID, this.gid);
-        this.addIfNotNull(pillarSeq, GID_FROM_NAME, this.gidFromName);
-        this.addIfNotDefault(pillarSeq, SYSTEM, this.system, DEFAULT_SYSTEM);
+        pillarMap.put(UID, this.uid);
+        pillarMap.put(GID, this.gid);
+        pillarMap.put(GID_FROM_NAME, this.gidFromName);
+        pillarMap.put(SYSTEM, this.system);
 
         // Home directory. Note parent of home directory must always exist.
-        this.addIfNotNull(pillarSeq, HOME, this.home);
-        this.addIfNotDefault(pillarSeq, CREATEHOME, this.createHome, DEFAULT_CREATEHOME);
+        pillarMap.put(HOME, this.home);
+        pillarMap.put(CREATEHOME, this.createHome);
 
         // Password handling
-        this.addIfNotDefault(pillarSeq, HASH_PASSWORD, this.hashPassword, DEFAULT_HASH_PASSWORD);
-        this.addIfNotDefault(pillarSeq, ENFORCE_PASSWORD, this.enforcePassword, DEFAULT_ENFORCE_PASSWORD);
-        this.addProperty(pillarSeq, PASSWORD, this.passwordPlain);
+        pillarMap.put(HASH_PASSWORD, this.hashPassword);
+        pillarMap.put(ENFORCE_PASSWORD, this.enforcePassword);
+        pillarMap.put(PASSWORD, this.passwordPlain);
 
         // User's shell
-        this.addIfNotNull(pillarSeq, SHELL, this.shell);
+        pillarMap.put(SHELL, this.shell);
 
         // GECOS fields
-        this.addIfNotNull(pillarSeq, FULLNAME, this.gecosFullname);
-        this.addIfNotNull(pillarSeq, ROOMNUMBER, this.gecosRoomNumber);
-        this.addIfNotNull(pillarSeq, WORKPHONE, this.gecosWorkphone);
-        this.addIfNotNull(pillarSeq, HOMEPHONE, this.gecosHomephone);
-        this.addIfNotNull(pillarSeq, OTHER, this.gecosOther);
+        pillarMap.put(FULLNAME, this.gecosFullname);
+        pillarMap.put(ROOMNUMBER, this.gecosRoomNumber);
+        pillarMap.put(WORKPHONE, this.gecosWorkphone);
+        pillarMap.put(HOMEPHONE, this.gecosHomephone);
+        pillarMap.put(OTHER, this.gecosOther);
 
         // Shadow attributes
-        this.addIfNotNull(pillarSeq, DATE, this.dateLastPasswordChange);
-        this.addIfNotNull(pillarSeq, MINDAYS, this.minDaysBetweenPasswordChanges);
-        this.addIfNotNull(pillarSeq, MAXDAYS, this.maxDaysBetweenPasswordChanges);
-        this.addIfNotNull(pillarSeq, INACTDAYS, this.inactDaysBeforeLocked);
-        this.addIfNotNull(pillarSeq, WARNDAYS, this.warnDaysBeforeMaxDaysBetweenPasswordChanges);
-        this.addIfNotNull(pillarSeq, EXPIRE, this.dateExpire);
+        pillarMap.put(DATE, this.dateLastPasswordChange);
+        pillarMap.put(MINDAYS, this.minDaysBetweenPasswordChanges);
+        pillarMap.put(MAXDAYS, this.maxDaysBetweenPasswordChanges);
+        pillarMap.put(INACTDAYS, this.inactDaysBeforeLocked);
+        pillarMap.put(WARNDAYS, this.warnDaysBeforeMaxDaysBetweenPasswordChanges);
+        pillarMap.put(EXPIRE, this.dateExpire);
 
         // Windows
-        this.addIfNotNull(pillarSeq, WIN_HOMEDRIVE, this.winHomedrive);
-        this.addIfNotNull(pillarSeq, WIN_PROFILE, this.winProfile);
-        this.addIfNotNull(pillarSeq, WIN_LOGONSCRIPT, this.winLogonscript);
-        this.addIfNotNull(pillarSeq, WIN_DESCRIPTION, this.winDescription);
+        pillarMap.put(WIN_HOMEDRIVE, this.winHomedrive);
+        pillarMap.put(WIN_PROFILE, this.winProfile);
+        pillarMap.put(WIN_LOGONSCRIPT, this.winLogonscript);
+        pillarMap.put(WIN_DESCRIPTION, this.winDescription);
 
         // user.absent properties
-        this.addIfNotDefault(pillarSeq, PURGE, this.absentPurge, DEFAULT_ABSENT_PURGE);
-        this.addIfNotDefault(pillarSeq, FORCE, this.absentForce, DEFAULT_ABSENT_FORCE);
+        pillarMap.put(PURGE, this.absentPurge);
+        pillarMap.put(FORCE, this.absentForce);
 
-        return pillarSeq;
+        return pillarMap;
     }
     
     /**

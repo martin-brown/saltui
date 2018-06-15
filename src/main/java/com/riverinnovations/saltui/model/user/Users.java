@@ -70,15 +70,15 @@ public class Users {
         return usersMap;
     }
 
-    public Map<String, Map<String, List<Map<String, Object>>>> getYamlPillar() throws Exception {
-        Map<String, List<Map<String, Object>>> usersMap = new HashMap<>();
+    public Map<String, Map<String, Map<String, Object>>> getYamlPillar() throws Exception {
+        Map<String, Map<String, Object>> usersMap = new HashMap<>();
 
         for (User u: this.userMap.values()) {
             LOGGER.info("Returning user " + u.getName() + " in user maps");
             usersMap.put(u.getName(), u.toPillarMap());
         }
 
-        Map<String, Map<String, List<Map<String, Object>>>> pillarMap = new HashMap<>();
+        Map<String, Map<String, Map<String, Object>>> pillarMap = new HashMap<>();
         pillarMap.put("users", usersMap);
         return pillarMap;
     }
