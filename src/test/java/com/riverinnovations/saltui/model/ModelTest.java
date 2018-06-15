@@ -45,6 +45,9 @@ public class ModelTest {
         UserState userState = new UserState(statePath, pillarPath);
         userState.save(users);
 
+        // Try to read them back in again
+        Users restoredUsers = userState.load();
+
         /*Map<String, ?> restoredUsers = userState.load();
         for (Map.Entry<String, ?> usersEntry: restoredUsers.entrySet()) {
             System.err.println(usersEntry);

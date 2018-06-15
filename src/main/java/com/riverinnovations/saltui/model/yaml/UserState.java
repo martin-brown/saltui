@@ -1,15 +1,21 @@
 package com.riverinnovations.saltui.model.yaml;
 
+import com.riverinnovations.saltui.model.BadYamlException;
+import com.riverinnovations.saltui.model.user.User;
 import com.riverinnovations.saltui.model.user.Users;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.SafeConstructor;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Map;
 
 /**
  * Represents the user data stored in a Pillar.
@@ -46,13 +52,46 @@ public class UserState {
      * Loads a YAML file into memory.
      * @return A map of user name to User object.
      */
-    /*public Map<String, ?> load() throws IOException {
+    public Users load() throws IOException, BadYamlException {
+        Users users = new Users();
+
         Yaml yaml = new Yaml(new SafeConstructor());
-        try (InputStream istr = Files.newInputStream(stateFilePath)) {
+        try (InputStream istr = Files.newInputStream(pillarFilePath)) {
             Map<String, ?> map = yaml.load(istr);
-            return map;
+
+            if (map.containsKey("users")) {
+                Object oUsersMap = map.get("users");
+                if (! (oUsersMap instanceof Map)) {
+                    throw new IOException("Cannot find users key in pillar");
+                }
+                else {
+                    Map<Object, Object> usersMap = (Map<Object, Object>)oUsersMap;
+
+                    for (Map.Entry<Object, Object> usersEntry: usersMap.entrySet()) {
+                        Object oName = usersEntry.getKey();
+                        if (oName == null) {
+                            throw new IOException("User entry key is null");
+                        }
+                        else {
+                            String name = oName.toString();
+
+                            Object value = usersEntry.getValue();
+                            if (!(value instanceof Map)) {
+                                throw new IOException("Value for user '" + name + " is not Map");
+                            }
+                            else {
+                                Map userMap = (Map) value;
+                                User user = User.fromPillarMap(userMap);
+                                users.addUser(user);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return users;
         }
-    }*/
+    }
 
     /**
      * Saves users to a YAML file.
@@ -69,7 +108,6 @@ public class UserState {
         dumperOptions.setSplitLines(false);
         dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         dumperOptions.setDefaultScalarStyle(DumperOptions.ScalarStyle.DOUBLE_QUOTED);
-        //dumperOptions.setCanonical(true);
         // TODO - always quote strings to avoid parsing numeric data incorrectly!
 
         Yaml yaml = new Yaml(dumperOptions);

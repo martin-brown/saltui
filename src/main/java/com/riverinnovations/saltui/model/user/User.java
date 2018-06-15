@@ -717,10 +717,14 @@ public class User {
     /**
      * Utility function called from fromPillarMap() to set properties on a User from a Map.
      */
-    private static void setProperties(User user, Map<String, Object> map) throws BadYamlException {
+    private static void setProperties(User user, Map<Object, Object> map) throws BadYamlException {
         if (map != null) {
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                String key = entry.getKey();
+            for (Map.Entry<Object, Object> entry : map.entrySet()) {
+                if (entry.getKey() == null) {
+                    throw new BadYamlException("key is null");
+                }
+
+                String key = entry.getKey().toString();
                 Object value = entry.getValue();
 
                 try {
@@ -749,6 +753,11 @@ public class User {
                         case HASH_PASSWORD:
                             user.hashPassword = (Boolean) value;
                             break;
+                        case ENFORCE_PASSWORD:
+                            user.enforcePassword = (Boolean) value;
+                            break;
+                        case PASSWORD:
+                            user.passwordPlain = (String) value;
                         case SHELL:
                             user.shell = (String) value;
                             break;
@@ -819,7 +828,7 @@ public class User {
      * Constructs a bean from the contents of a series of maps.
      * @param pillarMap Map of properties to construct the state from
      */
-    public static @NonNull User fromPillarMap(@NonNull Map<String, Object> pillarMap)
+    public static @NonNull User fromPillarMap(@NonNull Map<Object, Object> pillarMap)
             throws BadYamlException {
         User user = new User();
 
