@@ -25,6 +25,13 @@ public class Users {
     }
 
     /**
+     * Constructs a Users object from YAML.
+     */
+    public Users(Map<String, ?> yamlData) {
+
+    }
+
+    /**
      * Adds the user to the set of users.
      * @param user The user to add. Must not be null (IllegalArgumentException).
      */
@@ -53,14 +60,12 @@ public class Users {
      * Returns all the users in a structure suitable for conversion to YAML.
      * @return All the users as a structure of maps.
      */
-    public Map<String, Map<String, Map<String, Object>>> getYamlUsers() throws Exception {
-        Map<String, Map<String, Map<String, Object>>> usersMap = new HashMap<>();
+    public Map<String, Map<String, List<Map<String, Object>>>> getYamlUsers() throws Exception {
+        Map<String, Map<String, List<Map<String, Object>>>> usersMap = new HashMap<>();
 
         for (User u: this.userMap.values()) {
             LOGGER.info("Returning user " + u.getName() + " in user maps");
-            User.YamlEntries userYamlEntries = u.toStateMap();
-            usersMap.put("saltui-users-" + u.getName(), userYamlEntries.getStateMap());
-            usersMap.put("saltui-unop-" + u.getName(), userYamlEntries.getNopMap());
+            usersMap.put("saltui-users-" + u.getName(), u.toStateMap());
         }
         return usersMap;
     }

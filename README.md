@@ -29,48 +29,48 @@ file; format TBD, but possibly something like this:
 ```yaml
 saltui-groups-alpha:
     group.present:
-        name: alpha
-        system: false
+        - name: alpha
+        - system: false
         
 saltui-groups-beta:
     group.present:
-        name: beta
-        system: false
+        - name: beta
+        - system: false
         
 saltui-groups-gamma:
     group.absent:
-        name: gamma    
+        - name: gamma    
         
 saltui-users-two:
     user.present:
-        gidFromName: false
-        fullname: The second user
-        system: false
-        enforce_password: true
-        hash_password: false
-        name: two
-        createhome: true
-        password: {{ pillar['users']['two']['password'] }}
-        groups: 
+        - gid_from_name: false
+        - fullname: The second user
+        - system: false
+        - enforce_password: true
+        - hash_password: false
+        - name: two
+        - createhome: true
+        - password: {{ pillar['users']['two']['password'] }}
+        - groups: 
           - alpha
           - beta
         
 saltui-users-one:
     user.present:
-        gidFromName: false
-        fullname: The first user
-        system: false
-        enforce_password: true
-        hash_password: false
-        name: one
-        createhome: true
-        password: {{ pillar['users']['two']['password'] }}
+        - gid_from_name: false
+        - fullname: The first user
+        - system: false
+        - enforce_password: true
+        - hash_password: false
+        - name: one
+        - createhome: true
+        - password: {{ pillar['users']['two']['password'] }}
         
 saltui-users-three:
     user.absent:
-        name: three
-        purge: true
-        force: true
+        - name: three
+        - purge: true
+        - force: true
 ```
 
 This will create users 'one' and 'two', while deleting the account and all the files of user 'three'.

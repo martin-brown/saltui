@@ -95,6 +95,13 @@
             <version>1.7.25</version>
         </dependency>
 
+        <!-- Checker framework for code safety checking -->
+        <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker</artifactId>
+            <version>2.5.2</version>
+        </dependency>
+
         <!-- Logger implementation used for testing -->
         <dependency>
             <groupId>org.slf4j</groupId>

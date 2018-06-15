@@ -1,10 +1,16 @@
 package com.riverinnovations.saltui.model.user;
 
 import com.riverinnovations.saltui.model.BadYamlException;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -75,7 +81,7 @@ public class User {
     private static final String HASH_PASSWORD = "hash_password";
     private static final String ENFORCE_PASSWORD = "enforce_password";
     private static final String PASSWORD = "password";
-    private static final String PASSWORD_PILLAR_REF = "{{ pillar['users'][%s]['password'] }}";
+    private static final String PASSWORD_PILLAR_REF = "{{ pillar['users']['%s']['password'] }}";
     private static final String SHELL = "shell";
     private static final String FULLNAME = "fullname";
     private static final String ROOMNUMBER = "roomnumber";
@@ -100,6 +106,9 @@ public class User {
     public static final String STATE_USER_ABSENT = "user.absent";
     public static final String STATE_NOP = "test.nop";
 
+    // Groups to be a member of
+    public static final String GROUPS = "groups";
+
     // Default values
     private static final boolean DEFAULT_CREATEHOME = true;
     private static final boolean DEFAULT_SYSTEM = false;
@@ -109,16 +118,16 @@ public class User {
     private static final boolean DEFAULT_ABSENT_FORCE = false;
 
     /** The name of the user - must be unique */
-    private String name;
+    private @NonNull String name;
 
     /** Whether this user should exist; default true */
     private boolean present = true;
 
     /** The password hash for use on Linux, FreeBSD, NetBSD, OpenBSD, Solaris machines */
-    private String passwordHash;
+    private @Nullable String passwordHash;
 
     /** The plain-text password for use on Windows machines, or to hash for UNIX machines */
-    private String passwordPlain;
+    private @Nullable String passwordPlain;
 
     /** Whether to hash the plaintext password for UNIX machines */
     private boolean hashPassword = DEFAULT_HASH_PASSWORD;
@@ -127,70 +136,70 @@ public class User {
     private boolean enforcePassword = DEFAULT_ENFORCE_PASSWORD;
 
     /** The shell for this user (can be null) */
-    private String shell;
+    private @Nullable String shell;
 
     /** The home directory for this user (can be null in which case default location is used) */
-    private String home;
+    private @Nullable String home;
 
     /** Whether the home directory will be created if it doesn't exit. Default is true. */
     private boolean createHome = true;
 
     /** The UID for this user (can be null in which case next available GID will be used) */
-    private Integer uid;
+    private @Nullable Integer uid;
 
     /** Choose a UI in the range of FIRST_SYSTEM_UID and LAST_SYSTEM_UID if true */
     private boolean system = DEFAULT_SYSTEM;
 
     /** The GID for this user (can be null in which case next available GID will be used) */
-    private Integer gid;
+    private @Nullable Integer gid;
 
     /** Whether to use the GID from the group with the same name as the user */
     private boolean gidFromName;
 
     /** The full name of the user for display (can be null) (Linux, BSD, MacOS only) */
-    private String gecosFullname;
+    private @Nullable String gecosFullname;
 
     /** The user's room number (can be null) (Linux, BSD only) */
-    private String gecosRoomNumber;
+    private @Nullable String gecosRoomNumber;
 
     /** The user's workphone (can be null) (Linux, BSD only) */
-    private String gecosWorkphone;
+    private @Nullable String gecosWorkphone;
 
     /** The user's home phone (can be null) (Linux, BSD only) */
-    private String gecosHomephone;
+    private @Nullable String gecosHomephone;
 
     /** Other user data (can be null) (Linux, BSD only) */
-    private String gecosOther;
+    private @Nullable String gecosOther;
 
     /** Date of last password change, in days since epoch (can be null) (Linux only) */
-    private Integer dateLastPasswordChange;
+    private @Nullable Integer dateLastPasswordChange;
 
     /** Minimum number of days between password changes (can be null) (Linux only) */
-    private Integer minDaysBetweenPasswordChanges;
+    private @Nullable Integer minDaysBetweenPasswordChanges;
 
     /** Maximum number of days between password changes (can be null) (Linux only) */
-    private Integer maxDaysBetweenPasswordChanges;
+    private @Nullable Integer maxDaysBetweenPasswordChanges;
 
     /** Number of days after a password expires before an account is locked (can be null) (Linux only) */
-    private Integer inactDaysBeforeLocked;
+    private @Nullable Integer inactDaysBeforeLocked;
 
     /** Number of days before maxDaysBetweenPasswordChanges to warn users (can be null) (Linux only) */
-    private Integer warnDaysBeforeMaxDaysBetweenPasswordChanges;
+    private @Nullable Integer warnDaysBeforeMaxDaysBetweenPasswordChanges;
 
     /** Date that account expires, in days since epoch (can be null) (Linux only) */
-    private Integer dateExpire;
+    private @Nullable Integer dateExpire;
 
     /** Drive letter for the home directory (can be null in which case home will be on UNC path) (Windows only) */
-    private String winHomedrive;
+    private @Nullable String winHomedrive;
 
     /** Custom profile directory of the user. (can be null in which case uses default of underlying system) (Windows only) */
-    private String winProfile;
+    private @Nullable String winProfile;
 
     /** Full path to logon script to run when user logs in (can be null) (Windows only) */
-    private String winLogonscript;
+    private @Nullable String winLogonscript;
 
     /** Brief description of the users account (can be null) (Windows only) */
-    private String winDescription;
+    private @Nullable String winDescription;
 
     /** Deletion setting - purge all files */
     private boolean absentPurge = DEFAULT_ABSENT_PURGE;
@@ -198,11 +207,14 @@ public class User {
     /** Deletion setting - force deletion */
     private boolean absentForce = DEFAULT_ABSENT_FORCE;
 
-    public String getName() {
+    /** Groups that this user is a member of */
+    private final List<String> groups = new ArrayList<>();
+
+    public @NonNull String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(@NonNull String name) {
         this.name = name;
     }
 
@@ -214,19 +226,19 @@ public class User {
         this.present = present;
     }
 
-    public String getPasswordHash() {
+    public @Nullable String getPasswordHash() {
         return passwordHash;
     }
 
-    public void setPasswordHash(String passwordHash) {
+    public void setPasswordHash(@Nullable String passwordHash) {
         this.passwordHash = passwordHash;
     }
 
-    public String getPasswordPlain() {
+    public @Nullable String getPasswordPlain() {
         return passwordPlain;
     }
 
-    public void setPasswordPlain(String passwordPlain) {
+    public void setPasswordPlain(@NonNull String passwordPlain) {
         this.passwordPlain = passwordPlain;
     }
 
@@ -438,6 +450,15 @@ public class User {
         this.absentForce = absentForce;
     }
 
+    public List<String> getGroups() {
+        return Collections.unmodifiableList(groups);
+    }
+
+    public void setGroups(Collection<String> groups) {
+        this.groups.clear();
+        this.groups.addAll(groups);
+    }
+
     /**
      * Equals method generated by IntelliJ
      * @param o Object to compare
@@ -477,7 +498,8 @@ public class User {
                 Objects.equals(winLogonscript, user.winLogonscript) &&
                 Objects.equals(winDescription, user.winDescription) &&
                 Objects.equals(absentPurge, user.absentPurge) &&
-                Objects.equals(absentForce, user.absentForce);
+                Objects.equals(absentForce, user.absentForce) &&
+                Objects.equals(groups, user.groups);
     }
 
     /**
@@ -489,62 +511,74 @@ public class User {
     public int hashCode() {
 
         return Objects.hash(name,
-                present,
-                passwordHash,
-                passwordPlain,
-                hashPassword,
-                enforcePassword,
-                shell,
-                home,
-                createHome,
-                uid,
-                system,
-                gid,
-                gidFromName,
-                gecosFullname,
-                gecosRoomNumber,
-                gecosWorkphone,
-                gecosHomephone,
-                gecosOther,
-                dateLastPasswordChange,
-                minDaysBetweenPasswordChanges,
-                maxDaysBetweenPasswordChanges,
-                inactDaysBeforeLocked,
-                warnDaysBeforeMaxDaysBetweenPasswordChanges,
-                dateExpire,
-                winHomedrive,
-                winProfile,
-                winLogonscript,
-                winDescription,
-                absentPurge,
-                absentForce);
+                            present,
+                            passwordHash,
+                            passwordPlain,
+                            hashPassword,
+                            enforcePassword,
+                            shell,
+                            home,
+                            createHome,
+                            uid,
+                            system,
+                            gid,
+                            gidFromName,
+                            gecosFullname,
+                            gecosRoomNumber,
+                            gecosWorkphone,
+                            gecosHomephone,
+                            gecosOther,
+                            dateLastPasswordChange,
+                            minDaysBetweenPasswordChanges,
+                            maxDaysBetweenPasswordChanges,
+                            inactDaysBeforeLocked,
+                            warnDaysBeforeMaxDaysBetweenPasswordChanges,
+                            dateExpire,
+                            winHomedrive,
+                            winProfile,
+                            winLogonscript,
+                            winDescription,
+                            absentPurge,
+                            absentForce,
+                            groups);
+    }
+
+    /**
+     * Adds a property to a sequence as required by Salt State structure.
+     */
+    private void addProperty(@NonNull List<Map<String, Object>> seq,
+                             @NonNull String key,
+                             @Nullable Object value) {
+        Map<String, Object> map = new HashMap<>(1);
+        map.put(key, value);
+        seq.add(map);
     }
 
     /**
      * Utility method to add a value to a map if the value isn't null.
      * Used to filter out items that shouldn't be specified in the
      * YAML SLS file.
-     * @param map Map to add to.
+     * @param seq List to add property to.
      * @param key Key for value
      * @param value Value to add if it isn't null
      */
-    private void addIfNotNull(Map<String, Object> map, String key, Object value) {
+    private void addIfNotNull(List<Map<String, Object>> seq, String key, Object value) {
         if (value != null) {
-            map.put(key, value);
+            this.addProperty(seq, key, value);
         }
     }
 
     /**
      * Utility method to add a boolean value to a map if it isn't the default value.
      * Reduces the number of entries we make in the YAML SLS file.
-     * @param map Map to add to
+     * @param seq Sequence to add to
      * @param key Key for value
      * @param value Value to add if it isn't the default value
      * @param defaultValue Default value to check against
      */
-    private void addIfNotDefault(Map<String, Object> map, String key, boolean value, boolean defaultValue) {
+    private void addIfNotDefault(List<Map<String, Object>> seq, String key, boolean value, boolean defaultValue) {
         if (value != defaultValue) {
-            map.put(key, value);
+            this.addProperty(seq, key, value);
         }
     }
 
@@ -552,15 +586,13 @@ public class User {
      * Converts the contents into a map suitable for a Salt State entry.
      * @return The map of bean properties to create the entry for one user in a Salt State file (.sls)
      */
-    public YamlEntries toStateMap() throws Exception {
+    public @NonNull Map<String, List<Map<String, Object>>> toStateMap() throws Exception {
 
         // Map of properties of this object, with the correct salt name as per
         // https://docs.saltstack.com/en/latest/ref/states/all/salt.states.user.html
         // Store extra properties in a test.nop map in the same userStateMap
-        Map<String, Object> state = new HashMap<String, Object>();
-        Map<String, Object> nop = new HashMap<String, Object>();
-        state.put(NAME, this.name);
-        nop.put(NAME, this.name);
+        List<Map<String, Object>> state = new ArrayList<>();
+        this.addProperty(state, NAME, this.name);
 
         if (this.present) {
 
@@ -575,10 +607,10 @@ public class User {
             this.addIfNotDefault(state,
                     CREATEHOME, this.createHome, DEFAULT_CREATEHOME);
 
-            // Password handling
+            // Password handling - reference value in pillar
             this.addIfNotDefault(state, HASH_PASSWORD, this.hashPassword, DEFAULT_HASH_PASSWORD);
             this.addIfNotDefault(state, ENFORCE_PASSWORD, this.enforcePassword, DEFAULT_ENFORCE_PASSWORD);
-            state.put(PASSWORD, String.format(PASSWORD_PILLAR_REF, this.name));
+            this.addIfNotNull(state, PASSWORD, String.format(PASSWORD_PILLAR_REF, this.name));
 
             // User's shell
             this.addIfNotNull(state, SHELL, this.shell);
@@ -603,69 +635,87 @@ public class User {
             this.addIfNotNull(state, WIN_PROFILE, this.winProfile);
             this.addIfNotNull(state, WIN_LOGONSCRIPT, this.winLogonscript);
             this.addIfNotNull(state, WIN_DESCRIPTION, this.winDescription);
-            
-            // Spare properties
-            this.addIfNotDefault(nop, PURGE, this.absentPurge, DEFAULT_ABSENT_PURGE);
-            this.addIfNotDefault(nop, FORCE, this.absentForce, DEFAULT_ABSENT_FORCE);
+
+            // Groups
+            this.addProperty(state, GROUPS, this.groups);
         }
         else {
             // user.absent properties
             this.addIfNotDefault(state, PURGE, this.absentPurge, DEFAULT_ABSENT_PURGE);
             this.addIfNotDefault(state, FORCE, this.absentForce, DEFAULT_ABSENT_FORCE);
-            
-            // Spare properties
-            // UID and GID handling
-            this.addIfNotNull(nop, UID, this.uid);
-            this.addIfNotNull(nop, GID, this.gid);
-            this.addIfNotNull(nop, GID_FROM_NAME, this.gidFromName);
-            this.addIfNotDefault(nop, SYSTEM, this.system, false);
-
-            // Home directory. Note parent of home directory must always exist.
-            this.addIfNotNull(nop, HOME, this.home);
-            this.addIfNotDefault(nop,
-                    CREATEHOME, this.createHome, true);
-
-            // Password handling
-            this.addIfNotDefault(nop, HASH_PASSWORD, this.hashPassword, false);
-
-            // User's shell
-            this.addIfNotNull(nop, SHELL, this.shell);
-
-            // GECOS fields
-            this.addIfNotNull(nop, FULLNAME, this.gecosFullname);
-            this.addIfNotNull(nop, ROOMNUMBER, this.gecosRoomNumber);
-            this.addIfNotNull(nop, WORKPHONE, this.gecosWorkphone);
-            this.addIfNotNull(nop, HOMEPHONE, this.gecosHomephone);
-            this.addIfNotNull(nop, OTHER, this.gecosOther);
-
-            // Shadow attributes
-            this.addIfNotNull(nop, DATE, this.dateLastPasswordChange);
-            this.addIfNotNull(nop, MINDAYS, this.minDaysBetweenPasswordChanges);
-            this.addIfNotNull(nop, MAXDAYS, this.maxDaysBetweenPasswordChanges);
-            this.addIfNotNull(nop, INACTDAYS, this.inactDaysBeforeLocked);
-            this.addIfNotNull(nop, WARNDAYS, this.warnDaysBeforeMaxDaysBetweenPasswordChanges);
-            this.addIfNotNull(nop, EXPIRE, this.dateExpire);
-
-            // Windows
-            this.addIfNotNull(nop, WIN_HOMEDRIVE, this.winHomedrive);
-            this.addIfNotNull(nop, WIN_PROFILE, this.winProfile);
-            this.addIfNotNull(nop, WIN_LOGONSCRIPT, this.winLogonscript);
-            this.addIfNotNull(nop, WIN_DESCRIPTION, this.winDescription);
         }
 
-        Map<String, Object> present = null;
-        Map<String, Object> absent = null;
+        Map<String, List<Map<String, Object>>> stateMap = new HashMap<>();
         if (this.present) {
-            present = state;
+            stateMap.put(User.STATE_USER_PRESENT, state);
         }
         else {
-            absent = state;
+            stateMap.put(User.STATE_USER_ABSENT, state);
         }
-        return new YamlEntries(present, absent, nop);
+        return stateMap;
     }
 
     /**
-     * Utility function called from fromMap() to set properties on a User from a Map.
+     * Returns the data for this object for putting in a pillar.
+     * Includes all the properties of this object, not necessarily in a 
+     * format compatible with SaltStack. Used to serialize the User
+     * to disk.
+     * @return A map containing all the data to be used when serializing
+     *         to disk.
+     */
+    public @NonNull List<Map<String, Object>>  toPillarMap() {
+        List<Map<String, Object>> pillarSeq = new ArrayList<>();
+
+        this.addProperty(pillarSeq, NAME, this.name);
+
+        // UID and GID handling
+        this.addIfNotNull(pillarSeq, UID, this.uid);
+        this.addIfNotNull(pillarSeq, GID, this.gid);
+        this.addIfNotNull(pillarSeq, GID_FROM_NAME, this.gidFromName);
+        this.addIfNotDefault(pillarSeq, SYSTEM, this.system, DEFAULT_SYSTEM);
+
+        // Home directory. Note parent of home directory must always exist.
+        this.addIfNotNull(pillarSeq, HOME, this.home);
+        this.addIfNotDefault(pillarSeq, CREATEHOME, this.createHome, DEFAULT_CREATEHOME);
+
+        // Password handling
+        this.addIfNotDefault(pillarSeq, HASH_PASSWORD, this.hashPassword, DEFAULT_HASH_PASSWORD);
+        this.addIfNotDefault(pillarSeq, ENFORCE_PASSWORD, this.enforcePassword, DEFAULT_ENFORCE_PASSWORD);
+        this.addProperty(pillarSeq, PASSWORD, this.passwordPlain);
+
+        // User's shell
+        this.addIfNotNull(pillarSeq, SHELL, this.shell);
+
+        // GECOS fields
+        this.addIfNotNull(pillarSeq, FULLNAME, this.gecosFullname);
+        this.addIfNotNull(pillarSeq, ROOMNUMBER, this.gecosRoomNumber);
+        this.addIfNotNull(pillarSeq, WORKPHONE, this.gecosWorkphone);
+        this.addIfNotNull(pillarSeq, HOMEPHONE, this.gecosHomephone);
+        this.addIfNotNull(pillarSeq, OTHER, this.gecosOther);
+
+        // Shadow attributes
+        this.addIfNotNull(pillarSeq, DATE, this.dateLastPasswordChange);
+        this.addIfNotNull(pillarSeq, MINDAYS, this.minDaysBetweenPasswordChanges);
+        this.addIfNotNull(pillarSeq, MAXDAYS, this.maxDaysBetweenPasswordChanges);
+        this.addIfNotNull(pillarSeq, INACTDAYS, this.inactDaysBeforeLocked);
+        this.addIfNotNull(pillarSeq, WARNDAYS, this.warnDaysBeforeMaxDaysBetweenPasswordChanges);
+        this.addIfNotNull(pillarSeq, EXPIRE, this.dateExpire);
+
+        // Windows
+        this.addIfNotNull(pillarSeq, WIN_HOMEDRIVE, this.winHomedrive);
+        this.addIfNotNull(pillarSeq, WIN_PROFILE, this.winProfile);
+        this.addIfNotNull(pillarSeq, WIN_LOGONSCRIPT, this.winLogonscript);
+        this.addIfNotNull(pillarSeq, WIN_DESCRIPTION, this.winDescription);
+
+        // user.absent properties
+        this.addIfNotDefault(pillarSeq, PURGE, this.absentPurge, DEFAULT_ABSENT_PURGE);
+        this.addIfNotDefault(pillarSeq, FORCE, this.absentForce, DEFAULT_ABSENT_FORCE);
+
+        return pillarSeq;
+    }
+    
+    /**
+     * Utility function called from fromPillarMap() to set properties on a User from a Map.
      */
     private static void setProperties(User user, Map<String, Object> map) throws BadYamlException {
         if (map != null) {
@@ -767,15 +817,14 @@ public class User {
     
     /**
      * Constructs a bean from the contents of a series of maps.
-     * @param map Map of properties to construct the state from
+     * @param pillarMap Map of properties to construct the state from
      */
-    public static User fromMap(Map<String, Map<String, Object>> map) throws BadYamlException {
+    public static @NonNull User fromPillarMap(@NonNull Map<String, Object> pillarMap)
+            throws BadYamlException {
         User user = new User();
 
         // Set the object properties from each possible entry
-        setProperties(user, map.get(STATE_USER_PRESENT));
-        setProperties(user, map.get(STATE_USER_ABSENT));
-        setProperties(user, map.get(STATE_NOP));
+        setProperties(user, pillarMap);
 
         return user;
     }

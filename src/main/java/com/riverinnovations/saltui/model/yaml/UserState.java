@@ -17,34 +17,34 @@ import java.util.Map;
 /**
  * Represents the user data stored in a Pillar.
  */
-public class UserPillar {
+public class UserState {
 
     /** The name of the file we want to manage */
-    private final Path yamlFilePath;
+    private final Path stateFilePath;
 
     /**
      * Constructor.
-     * @param yamlFilePath The path to the file that we're going to manage.
+     * @param stateFilePath The path to the file that we're going to manage.
      *                     Must not be null.
      *                     Must be readable and writable.
      *                     Parent directory must be readable and writable.
      */
-    public UserPillar(Path yamlFilePath) {
-        if (yamlFilePath == null) throw new IllegalArgumentException("yamlFilePath is null");
-        this.yamlFilePath = yamlFilePath;
+    public UserState(Path stateFilePath) {
+        if (stateFilePath == null) throw new IllegalArgumentException("stateFilePath is null");
+        this.stateFilePath = stateFilePath;
     }
 
     /**
      * Loads a YAML file into memory.
-     * @return A Users object that we want to load.
+     * @return A map of user name to User object.
      */
-    public Map<String, ?> load() throws IOException {
+    /*public Map<String, ?> load() throws IOException {
         Yaml yaml = new Yaml(new SafeConstructor());
-        try (InputStream istr = Files.newInputStream(yamlFilePath)) {
+        try (InputStream istr = Files.newInputStream(stateFilePath)) {
             Map<String, ?> map = yaml.load(istr);
             return map;
         }
-    }
+    }*/
 
     /**
      * Saves users to a YAML file.
@@ -57,14 +57,15 @@ public class UserPillar {
         // Notably we don't want to split lines as otherwise string entries
         // may not be parsable.
         DumperOptions dumperOptions = new DumperOptions();
-        dumperOptions.setIndent(4);
+        dumperOptions.setIndent(2);
         dumperOptions.setSplitLines(false);
         dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-        dumperOptions.setDefaultScalarStyle(DumperOptions.ScalarStyle.SINGLE_QUOTED);
+        dumperOptions.setDefaultScalarStyle(DumperOptions.ScalarStyle.DOUBLE_QUOTED);
+        //dumperOptions.setCanonical(true);
         // TODO - always quote strings to avoid parsing numeric data incorrectly!
 
         Yaml yaml = new Yaml(dumperOptions);
-        try (Writer w = Files.newBufferedWriter(yamlFilePath,
+        try (Writer w = Files.newBufferedWriter(stateFilePath,
                 StandardCharsets.UTF_8,
                 StandardOpenOption.CREATE,
                 StandardOpenOption.TRUNCATE_EXISTING)) {

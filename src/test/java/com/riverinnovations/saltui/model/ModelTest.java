@@ -2,12 +2,14 @@ package com.riverinnovations.saltui.model;
 
 import com.riverinnovations.saltui.model.user.User;
 import com.riverinnovations.saltui.model.user.Users;
-import com.riverinnovations.saltui.model.yaml.UserPillar;
+import com.riverinnovations.saltui.model.yaml.UserState;
 import org.junit.Test;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -21,6 +23,10 @@ public class ModelTest {
         one.setName("one");
         one.setGecosFullname("The first user");
         one.setPasswordPlain("secret1");
+        List<String> oneGroups = new ArrayList<>();
+        oneGroups.add("g-one");
+        oneGroups.add("g-two");
+        one.setGroups(oneGroups);
 
         User two = new User();
         two.setName("two");
@@ -35,10 +41,10 @@ public class ModelTest {
 
         Path pillarPath = Paths.get("target/test/userpillar.yaml");
         Files.createDirectories(pillarPath.getParent());
-        UserPillar userPillar = new UserPillar(pillarPath);
-        userPillar.save(users);
+        UserState userState = new UserState(pillarPath);
+        userState.save(users);
 
-        Map<String, ?> restoredUsers = userPillar.load();
+        /*Map<String, ?> restoredUsers = userState.load();
         for (Map.Entry<String, ?> usersEntry: restoredUsers.entrySet()) {
             System.err.println(usersEntry);
             if (usersEntry.getValue() instanceof Map) {
@@ -47,6 +53,6 @@ public class ModelTest {
                     //User user = User.fromMap(userEntry.getValue());
                 }
             }
-        }
+        }*/
     }
 }
