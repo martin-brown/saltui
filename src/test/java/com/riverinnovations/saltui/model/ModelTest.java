@@ -19,8 +19,7 @@ public class ModelTest {
 
     @Test
     public void testSave() throws Exception {
-        User one = new User();
-        one.setName("one");
+        User one = new User("one");
         one.setGecosFullname("The first user");
         one.setPasswordPlain("secret1");
         List<String> oneGroups = new ArrayList<>();
@@ -28,8 +27,7 @@ public class ModelTest {
         oneGroups.add("g-two");
         one.setGroups(oneGroups);
 
-        User two = new User();
-        two.setName("two");
+        User two = new User("two");
         two.setGecosFullname("The second user");
         two.setPasswordPlain("secret2");
         two.setAbsentForce(true);

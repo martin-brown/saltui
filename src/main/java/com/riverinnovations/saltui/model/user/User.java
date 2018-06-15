@@ -21,51 +21,7 @@ import java.util.Objects;
  */
 public class User {
 
-    public class YamlEntries {
-        private final Map<String, Object> present;
-        private final Map<String, Object> absent;
-        private final Map<String, Object> nop;
-
-        /**
-         * Constructor for YamlEntries for this User.
-         * One of present or absent must not be null (IllegalArgumentException)
-         * @param present The properties if this user is to be present.
-         * @param absent The properties if this user is to be absent.
-         * @param nop The properties that are not elsewhere. Must not be null
-         *            (IllegalArgumentException).
-         */
-        public YamlEntries(Map<String, Object> present,
-                           Map<String, Object> absent,
-                           Map<String, Object> nop) {
-            if (present == null && absent == null) throw new IllegalArgumentException("Both present and absent are null");
-            if (nop == null) throw new IllegalArgumentException("nop is null");
-            this.present = present;
-            this.absent = absent;
-            this.nop = nop;
-        }
-        public Map<String, Object> getPresent() {
-            return present;
-        }
-        public Map<String, Object> getAbsent() {
-            return absent;
-        }
-        public Map<String, Map<String, Object>> getNopMap() {
-            Map<String, Map<String, Object>> nopMap = new HashMap<>();
-            nopMap.put(User.STATE_NOP, nop);
-            return nopMap;
-        }
-        public Map<String, Map<String, Object>> getStateMap() {
-            Map<String, Map<String, Object>> stateMap = new HashMap<>();
-            if (present != null) {
-                stateMap.put(User.STATE_USER_PRESENT, present);
-            }
-            else {
-                stateMap.put(User.STATE_USER_ABSENT, absent);
-            }
-            return stateMap;
-        }
-    }
-
+    /** User name */
     public static final String NAME = "name";
 
     /** Logger */
@@ -102,14 +58,14 @@ public class User {
     private static final String FORCE = "force";
 
     // States
-    public static final String STATE_USER_PRESENT = "user.present";
-    public static final String STATE_USER_ABSENT = "user.absent";
-    public static final String STATE_NOP = "test.nop";
+    private static final String STATE_USER_PRESENT = "user.present";
+    private static final String STATE_USER_ABSENT = "user.absent";
 
     // Groups to be a member of
-    public static final String GROUPS = "groups";
+    private static final String GROUPS = "groups";
 
     // Default values
+    private static final boolean DEFAULT_GID_FROM_NAME = false;
     private static final boolean DEFAULT_CREATEHOME = true;
     private static final boolean DEFAULT_SYSTEM = false;
     private static final boolean DEFAULT_HASH_PASSWORD = false;
@@ -118,7 +74,7 @@ public class User {
     private static final boolean DEFAULT_ABSENT_FORCE = false;
 
     /** The name of the user - must be unique */
-    private @NonNull String name;
+    private final @NonNull String name;
 
     /** Whether this user should exist; default true */
     private boolean present = true;
@@ -154,7 +110,7 @@ public class User {
     private @Nullable Integer gid;
 
     /** Whether to use the GID from the group with the same name as the user */
-    private boolean gidFromName;
+    private boolean gidFromName = DEFAULT_GID_FROM_NAME;
 
     /** The full name of the user for display (can be null) (Linux, BSD, MacOS only) */
     private @Nullable String gecosFullname;
@@ -210,12 +166,12 @@ public class User {
     /** Groups that this user is a member of */
     private final List<String> groups = new ArrayList<>();
 
-    public @NonNull String getName() {
-        return name;
+    public User(@NonNull String name) {
+        this.name = name;
     }
 
-    public void setName(@NonNull String name) {
-        this.name = name;
+    public @NonNull String getName() {
+        return name;
     }
 
     public boolean isPresent() {
@@ -562,9 +518,16 @@ public class User {
      * @param key Key for value
      * @param value Value to add if it isn't null
      */
-    private void addIfNotNull(List<Map<String, Object>> seq, String key, Object value) {
+    private void addIfNotNullOrEmpty(List<Map<String, Object>> seq, String key, Object value) {
         if (value != null) {
-            this.addProperty(seq, key, value);
+            if (value instanceof Collection) {
+                if (!((Collection)value).isEmpty()) {
+                    this.addProperty(seq, key, value);
+                }
+            }
+            else {
+                this.addProperty(seq, key, value);
+            }
         }
     }
 
@@ -597,47 +560,47 @@ public class User {
         if (this.present) {
 
             // UID and GID handling
-            this.addIfNotNull(state, UID, this.uid);
-            this.addIfNotNull(state, GID, this.gid);
-            this.addIfNotNull(state, GID_FROM_NAME, this.gidFromName);
+            this.addIfNotNullOrEmpty(state, UID, this.uid);
+            this.addIfNotNullOrEmpty(state, GID, this.gid);
+            this.addIfNotDefault(state, GID_FROM_NAME, this.gidFromName, DEFAULT_GID_FROM_NAME);
             this.addIfNotDefault(state, SYSTEM, this.system, DEFAULT_SYSTEM);
 
             // Home directory. Note parent of home directory must always exist.
-            this.addIfNotNull(state, HOME, this.home);
+            this.addIfNotNullOrEmpty(state, HOME, this.home);
             this.addIfNotDefault(state,
                     CREATEHOME, this.createHome, DEFAULT_CREATEHOME);
 
             // Password handling - reference value in pillar
             this.addIfNotDefault(state, HASH_PASSWORD, this.hashPassword, DEFAULT_HASH_PASSWORD);
             this.addIfNotDefault(state, ENFORCE_PASSWORD, this.enforcePassword, DEFAULT_ENFORCE_PASSWORD);
-            this.addIfNotNull(state, PASSWORD, String.format(PASSWORD_PILLAR_REF, this.name));
+            this.addIfNotNullOrEmpty(state, PASSWORD, String.format(PASSWORD_PILLAR_REF, this.name));
 
             // User's shell
-            this.addIfNotNull(state, SHELL, this.shell);
+            this.addIfNotNullOrEmpty(state, SHELL, this.shell);
 
             // GECOS fields
-            this.addIfNotNull(state, FULLNAME, this.gecosFullname);
-            this.addIfNotNull(state, ROOMNUMBER, this.gecosRoomNumber);
-            this.addIfNotNull(state, WORKPHONE, this.gecosWorkphone);
-            this.addIfNotNull(state, HOMEPHONE, this.gecosHomephone);
-            this.addIfNotNull(state, OTHER, this.gecosOther);
+            this.addIfNotNullOrEmpty(state, FULLNAME, this.gecosFullname);
+            this.addIfNotNullOrEmpty(state, ROOMNUMBER, this.gecosRoomNumber);
+            this.addIfNotNullOrEmpty(state, WORKPHONE, this.gecosWorkphone);
+            this.addIfNotNullOrEmpty(state, HOMEPHONE, this.gecosHomephone);
+            this.addIfNotNullOrEmpty(state, OTHER, this.gecosOther);
 
             // Shadow attributes
-            this.addIfNotNull(state, DATE, this.dateLastPasswordChange);
-            this.addIfNotNull(state, MINDAYS, this.minDaysBetweenPasswordChanges);
-            this.addIfNotNull(state, MAXDAYS, this.maxDaysBetweenPasswordChanges);
-            this.addIfNotNull(state, INACTDAYS, this.inactDaysBeforeLocked);
-            this.addIfNotNull(state, WARNDAYS, this.warnDaysBeforeMaxDaysBetweenPasswordChanges);
-            this.addIfNotNull(state, EXPIRE, this.dateExpire);
+            this.addIfNotNullOrEmpty(state, DATE, this.dateLastPasswordChange);
+            this.addIfNotNullOrEmpty(state, MINDAYS, this.minDaysBetweenPasswordChanges);
+            this.addIfNotNullOrEmpty(state, MAXDAYS, this.maxDaysBetweenPasswordChanges);
+            this.addIfNotNullOrEmpty(state, INACTDAYS, this.inactDaysBeforeLocked);
+            this.addIfNotNullOrEmpty(state, WARNDAYS, this.warnDaysBeforeMaxDaysBetweenPasswordChanges);
+            this.addIfNotNullOrEmpty(state, EXPIRE, this.dateExpire);
 
             // Windows
-            this.addIfNotNull(state, WIN_HOMEDRIVE, this.winHomedrive);
-            this.addIfNotNull(state, WIN_PROFILE, this.winProfile);
-            this.addIfNotNull(state, WIN_LOGONSCRIPT, this.winLogonscript);
-            this.addIfNotNull(state, WIN_DESCRIPTION, this.winDescription);
+            this.addIfNotNullOrEmpty(state, WIN_HOMEDRIVE, this.winHomedrive);
+            this.addIfNotNullOrEmpty(state, WIN_PROFILE, this.winProfile);
+            this.addIfNotNullOrEmpty(state, WIN_LOGONSCRIPT, this.winLogonscript);
+            this.addIfNotNullOrEmpty(state, WIN_DESCRIPTION, this.winDescription);
 
             // Groups
-            this.addProperty(state, GROUPS, this.groups);
+            this.addIfNotNullOrEmpty(state, GROUPS, this.groups);
         }
         else {
             // user.absent properties
@@ -645,6 +608,7 @@ public class User {
             this.addIfNotDefault(state, FORCE, this.absentForce, DEFAULT_ABSENT_FORCE);
         }
 
+        // Wrap the object properties in present/absent commands
         Map<String, List<Map<String, Object>>> stateMap = new HashMap<>();
         if (this.present) {
             stateMap.put(User.STATE_USER_PRESENT, state);
@@ -730,7 +694,7 @@ public class User {
                 try {
                     switch (key) {
                         case NAME:
-                            user.name = (String) value;
+                            // Ignore - already set in constructor
                             break;
                         case UID:
                             user.uid = (Integer) value;
@@ -830,7 +794,15 @@ public class User {
      */
     public static @NonNull User fromPillarMap(@NonNull Map<Object, Object> pillarMap)
             throws BadYamlException {
-        User user = new User();
+
+        // Find the user's name
+        Object oName = pillarMap.get(User.NAME);
+        if (oName == null) {
+            throw new BadYamlException("No name for User in pillar data");
+        }
+
+        // Create the user
+        User user = new User(oName.toString());
 
         // Set the object properties from each possible entry
         setProperties(user, pillarMap);
