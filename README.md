@@ -15,14 +15,16 @@ expire every 90 days.
 * Secure password encryption. 
 
 ## TODO
-* Salt makes non-YAML demands of the YAML files - particularly when Jinja templates are to be used.
-  This means we need our own YAML generator and parser. Can be a subset of full functionality
-  as we will have full control over the files.
 * Need to tighten up User object construction so required properties are always present.
 * Need to tighten up Users object so User.name is always unique.
 * Proper unit testing.
-* Store all user data in a pillar file rather than a test.nop field in the state file.
-
+* Full use of Nullable / NonNull attributes
+* Thread safety and locking for concurrent updates of User/Users
+* Framework to manage User/Users & files on disk - autosave etc
+* Correct password handling:
+  * Encryption using Salt mechanisms (gpg)
+  * Not trying to load password back into User object once written
+  
 ## Objective
 This application will manage a [Salt State file](https://docs.saltstack.com/en/latest/topics/tutorials/starting_states.html) 
 file; format TBD, but possibly something like this:
@@ -90,6 +92,12 @@ Regarding deleting users and purging their files:
 * Need to test this to see what it does on various platforms.
 * Even if a user cannot log in via /etc/password it may be possible for them to gain access through other mechansims,
 for example SSH keys. Hence purging all their files may be more secure. Possibly platform dependent.
+
+A sane UI requires that all data can be read in, regardless of how much is written 
+to the State file. Thus the application stores all user data in a Pillar YAML file
+as well as the required state in the State YAML file. At some point in the future
+it could use a 'proper' database but memory objects persisted to disk files will
+do for now.
 
 # Initial Aims
 Provide a user interface that makes the basic SaltStack functionality available through a couple of user-interfaces:
