@@ -39,9 +39,10 @@ public class ModelTest {
         users.addUser(two);
         assertEquals(2, users.getUsers().size());
 
+        Path statePath = Paths.get("target/test/userstate.yaml");
         Path pillarPath = Paths.get("target/test/userpillar.yaml");
         Files.createDirectories(pillarPath.getParent());
-        UserState userState = new UserState(pillarPath);
+        UserState userState = new UserState(statePath, pillarPath);
         userState.save(users);
 
         /*Map<String, ?> restoredUsers = userState.load();
