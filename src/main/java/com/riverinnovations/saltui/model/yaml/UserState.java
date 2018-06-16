@@ -59,30 +59,32 @@ public class UserState {
         try (InputStream istr = Files.newInputStream(pillarFilePath)) {
             Map<String, ?> map = yaml.load(istr);
 
-            if (map.containsKey("users")) {
-                Object oUsersMap = map.get("users");
-                if (! (oUsersMap instanceof Map)) {
-                    throw new IOException("Cannot find users key in pillar");
-                }
-                else {
-                    Map<Object, Object> usersMap = (Map<Object, Object>)oUsersMap;
+            if (map != null) {
+                if (map.containsKey("users")) {
+                    Object oUsersMap = map.get("users");
+                    if (!(oUsersMap instanceof Map)) {
+                        throw new IOException("Cannot find users key in pillar");
+                    }
+                    else {
+                        Map<Object, Object> usersMap = (Map<Object, Object>) oUsersMap;
 
-                    for (Map.Entry<Object, Object> usersEntry: usersMap.entrySet()) {
-                        Object oName = usersEntry.getKey();
-                        if (oName == null) {
-                            throw new IOException("User entry key is null");
-                        }
-                        else {
-                            String name = oName.toString();
-
-                            Object value = usersEntry.getValue();
-                            if (!(value instanceof Map)) {
-                                throw new IOException("Value for user '" + name + " is not Map");
+                        for (Map.Entry<Object, Object> usersEntry : usersMap.entrySet()) {
+                            Object oName = usersEntry.getKey();
+                            if (oName == null) {
+                                throw new IOException("User entry key is null");
                             }
                             else {
-                                Map userMap = (Map) value;
-                                User user = User.fromPillarMap(userMap);
-                                users.addUser(user);
+                                String name = oName.toString();
+
+                                Object value = usersEntry.getValue();
+                                if (!(value instanceof Map)) {
+                                    throw new IOException("Value for user '" + name + " is not Map");
+                                }
+                                else {
+                                    Map userMap = (Map) value;
+                                    User user = User.fromPillarMap(userMap);
+                                    users.addUser(user);
+                                }
                             }
                         }
                     }

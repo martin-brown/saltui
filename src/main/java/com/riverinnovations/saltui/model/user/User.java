@@ -214,19 +214,19 @@ public class User {
         this.enforcePassword = enforcePassword;
     }
 
-    public String getShell() {
+    public @Nullable String getShell() {
         return shell;
     }
 
-    public void setShell(String shell) {
+    public void setShell(@Nullable String shell) {
         this.shell = shell;
     }
 
-    public String getHome() {
+    public @Nullable String getHome() {
         return home;
     }
 
-    public void setHome(String home) {
+    public void setHome(@Nullable String home) {
         this.home = home;
     }
 
@@ -238,11 +238,11 @@ public class User {
         this.createHome = createHome;
     }
 
-    public Integer getUid() {
+    public @Nullable Integer getUid() {
         return uid;
     }
 
-    public void setUid(Integer uid) {
+    public void setUid(@Nullable Integer uid) {
         this.uid = uid;
     }
 
@@ -254,11 +254,11 @@ public class User {
         this.system = system;
     }
 
-    public Integer getGid() {
+    public @Nullable Integer getGid() {
         return gid;
     }
 
-    public void setGid(Integer gid) {
+    public void setGid(@Nullable Integer gid) {
         this.gid = gid;
     }
 
@@ -270,123 +270,123 @@ public class User {
         this.gidFromName = gidFromName;
     }
 
-    public String getGecosFullname() {
+    public @Nullable String getGecosFullname() {
         return gecosFullname;
     }
 
-    public void setGecosFullname(String gecosFullname) {
+    public void setGecosFullname(@Nullable String gecosFullname) {
         this.gecosFullname = gecosFullname;
     }
 
-    public String getGecosRoomNumber() {
+    public @Nullable String getGecosRoomNumber() {
         return gecosRoomNumber;
     }
 
-    public void setGecosRoomNumber(String gecosRoomNumber) {
+    public void setGecosRoomNumber(@Nullable String gecosRoomNumber) {
         this.gecosRoomNumber = gecosRoomNumber;
     }
 
-    public String getGecosWorkphone() {
+    public @Nullable String getGecosWorkphone() {
         return gecosWorkphone;
     }
 
-    public void setGecosWorkphone(String gecosWorkphone) {
+    public void setGecosWorkphone(@Nullable String gecosWorkphone) {
         this.gecosWorkphone = gecosWorkphone;
     }
 
-    public String getGecosHomephone() {
+    public @Nullable String getGecosHomephone() {
         return gecosHomephone;
     }
 
-    public void setGecosHomephone(String gecosHomephone) {
+    public void setGecosHomephone(@Nullable String gecosHomephone) {
         this.gecosHomephone = gecosHomephone;
     }
 
-    public String getGecosOther() {
+    public @Nullable String getGecosOther() {
         return gecosOther;
     }
 
-    public void setGecosOther(String gecosOther) {
+    public void setGecosOther(@Nullable String gecosOther) {
         this.gecosOther = gecosOther;
     }
 
-    public Integer getDateLastPasswordChange() {
+    public @Nullable Integer getDateLastPasswordChange() {
         return dateLastPasswordChange;
     }
 
-    public void setDateLastPasswordChange(Integer dateLastPasswordChange) {
+    public void setDateLastPasswordChange(@Nullable Integer dateLastPasswordChange) {
         this.dateLastPasswordChange = dateLastPasswordChange;
     }
 
-    public Integer getMinDaysBetweenPasswordChanges() {
+    public @Nullable Integer getMinDaysBetweenPasswordChanges() {
         return minDaysBetweenPasswordChanges;
     }
 
-    public void setMinDaysBetweenPasswordChanges(Integer minDaysBetweenPasswordChanges) {
+    public void setMinDaysBetweenPasswordChanges(@Nullable Integer minDaysBetweenPasswordChanges) {
         this.minDaysBetweenPasswordChanges = minDaysBetweenPasswordChanges;
     }
 
-    public Integer getMaxDaysBetweenPasswordChanges() {
+    public @Nullable Integer getMaxDaysBetweenPasswordChanges() {
         return maxDaysBetweenPasswordChanges;
     }
 
-    public void setMaxDaysBetweenPasswordChanges(Integer maxDaysBetweenPasswordChanges) {
+    public void setMaxDaysBetweenPasswordChanges(@Nullable Integer maxDaysBetweenPasswordChanges) {
         this.maxDaysBetweenPasswordChanges = maxDaysBetweenPasswordChanges;
     }
 
-    public Integer getInactDaysBeforeLocked() {
+    public @Nullable Integer getInactDaysBeforeLocked() {
         return inactDaysBeforeLocked;
     }
 
-    public void setInactDaysBeforeLocked(Integer inactDaysBeforeLocked) {
+    public void setInactDaysBeforeLocked(@Nullable Integer inactDaysBeforeLocked) {
         this.inactDaysBeforeLocked = inactDaysBeforeLocked;
     }
 
-    public Integer getWarnDaysBeforeMaxDaysBetweenPasswordChanges() {
+    public @Nullable Integer getWarnDaysBeforeMaxDaysBetweenPasswordChanges() {
         return warnDaysBeforeMaxDaysBetweenPasswordChanges;
     }
 
-    public void setWarnDaysBeforeMaxDaysBetweenPasswordChanges(Integer warnDaysBeforeMaxDaysBetweenPasswordChanges) {
+    public void setWarnDaysBeforeMaxDaysBetweenPasswordChanges(@Nullable Integer warnDaysBeforeMaxDaysBetweenPasswordChanges) {
         this.warnDaysBeforeMaxDaysBetweenPasswordChanges = warnDaysBeforeMaxDaysBetweenPasswordChanges;
     }
 
-    public Integer getDateExpire() {
+    public @Nullable Integer getDateExpire() {
         return dateExpire;
     }
 
-    public void setDateExpire(Integer dateExpire) {
+    public void setDateExpire(@Nullable Integer dateExpire) {
         this.dateExpire = dateExpire;
     }
 
-    public String getWinHomedrive() {
+    public @Nullable String getWinHomedrive() {
         return winHomedrive;
     }
 
-    public void setWinHomedrive(String winHomedrive) {
+    public void setWinHomedrive(@Nullable String winHomedrive) {
         this.winHomedrive = winHomedrive;
     }
 
-    public String getWinProfile() {
+    public @Nullable String getWinProfile() {
         return winProfile;
     }
 
-    public void setWinProfile(String winProfile) {
+    public void setWinProfile(@Nullable String winProfile) {
         this.winProfile = winProfile;
     }
 
-    public String getWinLogonscript() {
+    public @Nullable String getWinLogonscript() {
         return winLogonscript;
     }
 
-    public void setWinLogonscript(String winLogonscript) {
+    public void setWinLogonscript(@Nullable String winLogonscript) {
         this.winLogonscript = winLogonscript;
     }
 
-    public String getWinDescription() {
+    public @Nullable String getWinDescription() {
         return winDescription;
     }
 
-    public void setWinDescription(String winDescription) {
+    public void setWinDescription(@Nullable String winDescription) {
         this.winDescription = winDescription;
     }
 
@@ -406,13 +406,15 @@ public class User {
         this.absentForce = absentForce;
     }
 
-    public List<String> getGroups() {
+    public @NonNull List<String> getGroups() {
         return Collections.unmodifiableList(groups);
     }
 
-    public void setGroups(Collection<String> groups) {
+    public void setGroups(@Nullable Collection<String> groups) {
         this.groups.clear();
-        this.groups.addAll(groups);
+        if (groups != null) {
+            this.groups.addAll(groups);
+        }
     }
 
     /**
@@ -421,7 +423,7 @@ public class User {
      * @return True if o equals this
      */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
@@ -502,10 +504,10 @@ public class User {
     /**
      * Adds a property to a sequence as required by Salt State structure.
      */
-    private void addProperty(@NonNull List<Map<String, Object>> seq,
-                             @NonNull String key,
-                             @Nullable Object value) {
-        Map<String, Object> map = new HashMap<>(1);
+    private void addProperty(@NonNull final List<Map<String, @Nullable Object>> seq,
+                             @NonNull final String key,
+                             @Nullable final Object value) {
+        final Map<String, @Nullable Object> map = new HashMap<>(1);
         map.put(key, value);
         seq.add(map);
     }
@@ -518,7 +520,9 @@ public class User {
      * @param key Key for value
      * @param value Value to add if it isn't null
      */
-    private void addIfNotNullOrEmpty(List<Map<String, Object>> seq, String key, Object value) {
+    private void addIfNotNullOrEmpty(@NonNull final List<Map<String, @Nullable Object>> seq,
+                                     @NonNull final String key,
+                                     @Nullable final Object value) {
         if (value != null) {
             if (value instanceof Collection) {
                 if (!((Collection)value).isEmpty()) {
@@ -539,7 +543,10 @@ public class User {
      * @param value Value to add if it isn't the default value
      * @param defaultValue Default value to check against
      */
-    private void addIfNotDefault(List<Map<String, Object>> seq, String key, boolean value, boolean defaultValue) {
+    private void addIfNotDefault(@NonNull final List<Map<String, @Nullable Object>> seq,
+                                 @NonNull final String key,
+                                 final boolean value,
+                                 final boolean defaultValue) {
         if (value != defaultValue) {
             this.addProperty(seq, key, value);
         }
@@ -549,12 +556,12 @@ public class User {
      * Converts the contents into a map suitable for a Salt State entry.
      * @return The map of bean properties to create the entry for one user in a Salt State file (.sls)
      */
-    public @NonNull Map<String, List<Map<String, Object>>> toStateMap() throws Exception {
+    public @NonNull Map<String, List<Map<String, @Nullable Object>>> toStateMap() throws Exception {
 
         // Map of properties of this object, with the correct salt name as per
         // https://docs.saltstack.com/en/latest/ref/states/all/salt.states.user.html
         // Store extra properties in a test.nop map in the same userStateMap
-        List<Map<String, Object>> state = new ArrayList<>();
+        List<Map<String, @Nullable Object>> state = new ArrayList<>();
         this.addProperty(state, NAME, this.name);
 
         if (this.present) {
@@ -609,7 +616,7 @@ public class User {
         }
 
         // Wrap the object properties in present/absent commands
-        Map<String, List<Map<String, Object>>> stateMap = new HashMap<>();
+        Map<String, List<Map<String, @Nullable Object>>> stateMap = new HashMap<>();
         if (this.present) {
             stateMap.put(User.STATE_USER_PRESENT, state);
         }
@@ -627,8 +634,8 @@ public class User {
      * @return A map containing all the data to be used when serializing
      *         to disk.
      */
-    public @NonNull Map<String, Object>  toPillarMap() {
-        Map<String, Object> pillarMap = new HashMap<>();
+    public @NonNull Map<String, @Nullable Object>  toPillarMap() {
+        final Map<String, @Nullable Object> pillarMap = new HashMap<>();
 
         pillarMap.put(NAME, this.name);
 
@@ -681,9 +688,9 @@ public class User {
     /**
      * Utility function called from fromPillarMap() to set properties on a User from a Map.
      */
-    private static void setProperties(User user, Map<Object, Object> map) throws BadYamlException {
+    private static void setProperties(User user, Map<Object, @Nullable Object> map) throws BadYamlException {
         if (map != null) {
-            for (Map.Entry<Object, Object> entry : map.entrySet()) {
+            for (Map.Entry<Object, @Nullable Object> entry : map.entrySet()) {
                 if (entry.getKey() == null) {
                     throw new BadYamlException("key is null");
                 }
@@ -703,22 +710,22 @@ public class User {
                             user.gid = (Integer) value;
                             break;
                         case GID_FROM_NAME:
-                            user.gidFromName = (Boolean) value;
+                            user.gidFromName = (value == null ? DEFAULT_GID_FROM_NAME : (Boolean) value);
                             break;
                         case SYSTEM:
-                            user.system = (Boolean) value;
+                            user.system = (value == null ? DEFAULT_SYSTEM : (Boolean) value);
                             break;
                         case HOME:
                             user.home = (String) value;
                             break;
                         case CREATEHOME:
-                            user.createHome = (Boolean) value;
+                            user.createHome = (value == null ? DEFAULT_CREATEHOME : (Boolean) value);
                             break;
                         case HASH_PASSWORD:
-                            user.hashPassword = (Boolean) value;
+                            user.hashPassword = (value == null ? DEFAULT_HASH_PASSWORD : (Boolean) value);
                             break;
                         case ENFORCE_PASSWORD:
-                            user.enforcePassword = (Boolean) value;
+                            user.enforcePassword = (value == null ? DEFAULT_ENFORCE_PASSWORD : (Boolean) value);
                             break;
                         case PASSWORD:
                             user.passwordPlain = (String) value;
@@ -771,17 +778,22 @@ public class User {
                             user.winDescription = (String) value;
                             break;
                         case PURGE:
-                            user.absentPurge = (Boolean) value;
+                            user.absentPurge = (value == null ? DEFAULT_ABSENT_PURGE : (Boolean) value);
                             break;
                         case FORCE:
-                            user.absentForce = (Boolean) value;
+                            user.absentForce = (value == null ? DEFAULT_ABSENT_FORCE : (Boolean) value);
                             break;
                         default:
                             throw new BadYamlException("Unknown user key: " + key);
                     }
-                } catch (ClassCastException e) {
+                }
+                catch (ClassCastException e) {
+                    String type = null;
+                    if (value != null) {
+                        type = value.getClass().getName();
+                    }
                     throw new BadYamlException("Bad type for key " + key + " with value " + value
-                            + ": cannot convert from type " + value.getClass().getName()
+                            + ": cannot convert from type " + type
                             + ": " + e.getMessage(), e);
                 }
             }
@@ -792,7 +804,7 @@ public class User {
      * Constructs a bean from the contents of a series of maps.
      * @param pillarMap Map of properties to construct the state from
      */
-    public static @NonNull User fromPillarMap(@NonNull Map<Object, Object> pillarMap)
+    public static @NonNull User fromPillarMap(@NonNull Map<Object, @Nullable Object> pillarMap)
             throws BadYamlException {
 
         // Find the user's name
