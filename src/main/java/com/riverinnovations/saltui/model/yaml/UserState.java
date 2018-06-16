@@ -71,25 +71,25 @@ public class UserState {
                         throw new BadYamlException("Value of users key was null");
                     }
                     else if (!(oUsersMap instanceof Map)) {
-                        throw new IOException("Cannot find users key in pillar");
+                        throw new BadYamlException("Cannot find users map in pillar");
                     }
                     else {
-                        Map<Object, Object> usersMap = (Map<Object, Object>) oUsersMap;
+                        Map<@Nullable Object, @Nullable Object> usersMap = (Map<@Nullable Object, @Nullable Object>) oUsersMap;
 
-                        for (Map.Entry<Object, Object> usersEntry : usersMap.entrySet()) {
-                            Object oName = usersEntry.getKey();
+                        for (Map.Entry<@Nullable Object, @Nullable Object> usersEntry : usersMap.entrySet()) {
+                            @Nullable Object oName = usersEntry.getKey();
                             if (oName == null) {
                                 throw new IOException("User entry key is null");
                             }
                             else {
                                 String name = oName.toString();
 
-                                Object value = usersEntry.getValue();
+                                @Nullable Object value = usersEntry.getValue();
                                 if (!(value instanceof Map)) {
                                     throw new IOException("Value for user '" + name + " is not Map");
                                 }
                                 else {
-                                    Map userMap = (Map) value;
+                                    Map<@Nullable Object, @Nullable Object> userMap = (Map<@Nullable Object, @Nullable Object>) value;
                                     User user = User.fromPillarMap(userMap);
                                     users.addUser(user);
                                 }
