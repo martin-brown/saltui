@@ -1,6 +1,7 @@
 package com.riverinnovations.saltui.model.yaml;
 
 import com.riverinnovations.saltui.model.BadYamlException;
+import com.riverinnovations.saltui.model.DuplicateNameException;
 import com.riverinnovations.saltui.model.user.User;
 import com.riverinnovations.saltui.model.user.Users;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -57,7 +58,7 @@ public class UserState {
      * Loads a YAML file into memory.
      * @return A map of user name to User object.
      */
-    public Users load() throws IOException, BadYamlException {
+    public Users load() throws IOException, BadYamlException, DuplicateNameException {
         Users users = new Users();
 
         Yaml yaml = new Yaml(new SafeConstructor());

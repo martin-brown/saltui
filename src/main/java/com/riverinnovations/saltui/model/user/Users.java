@@ -1,10 +1,12 @@
 package com.riverinnovations.saltui.model.user;
 
+import com.riverinnovations.saltui.model.DuplicateNameException;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.DumperOptions;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,8 +43,13 @@ public class Users {
      * Adds the user to the set of users.
      * @param user The user to add. Must not be null (IllegalArgumentException).
      */
-    public void addUser(User user) {
-        this.userMap.put(user.getName(), user);
+    public void addUser(User user) throws DuplicateNameException {
+        if (this.userMap.containsKey(user.getName())) {
+            throw new DuplicateNameException("User '" + user.getName() + "' already exists!");
+        }
+        else {
+            this.userMap.put(user.getName(), user);
+        }
     }
 
     /**
@@ -62,24 +69,26 @@ public class Users {
     }
 
     /**
-     * Returns all the users in a structure suitable for conversion to YAML.
+     * Returns all the users in a structure suitable for conversion to YAML for a salt state.
      * @return All the users as a structure of maps.
      */
     public Map<String, Map<String, List<Map<String, @Nullable Object>>>> getYamlState() throws Exception {
         Map<String, Map<String, List<Map<String, @Nullable Object>>>> usersMap = new HashMap<>();
 
         for (User u: this.userMap.values()) {
-            LOGGER.info("Returning user " + u.getName() + " in user maps");
             usersMap.put("saltui-users-" + u.getName(), u.toStateMap());
         }
         return usersMap;
     }
 
-    public Map<String, Map<String, Map<String, @Nullable Object>>> getYamlPillar() throws Exception {
+    /**
+     * Returns all the users in a structure suitable for conversion to YAML for a Salt Pillar.
+     * @return All the users as a structure of maps.
+     */
+    public Map<String, Map<String, Map<String, @Nullable Object>>> getYamlPillar() {
         Map<String, Map<String, @Nullable Object>> usersMap = new HashMap<>();
 
         for (User u: this.userMap.values()) {
-            LOGGER.info("Returning user " + u.getName() + " in user maps");
             usersMap.put(u.getName(), u.toPillarMap());
         }
 
@@ -87,12 +96,13 @@ public class Users {
         pillarMap.put("users", usersMap);
         return pillarMap;
     }
+
     /**
      * Used to construct the users map from YAML.
      * Clears the existing contents of the map.
      * @param users The users to add to the map.
      */
-    public void setUsers(Collection<User> users) {
+    public void setUsers(Collection<User> users) throws DuplicateNameException {
         this.userMap.clear();
         for (User u: users) {
             this.addUser(u);

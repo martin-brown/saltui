@@ -19,4 +19,5 @@ public class UserTest {
         assertNotEquals(one, two);
         assertNotEquals(one.hashCode(), two.hashCode());
     }
+
 }
