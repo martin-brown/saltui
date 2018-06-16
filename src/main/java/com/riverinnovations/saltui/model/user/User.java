@@ -1,8 +1,10 @@
 package com.riverinnovations.saltui.model.user;
 
 import com.riverinnovations.saltui.model.BadYamlException;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.framework.qual.DefaultQualifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +20,10 @@ import java.util.Objects;
  * Class models a User who is to be granted logon permissions to a system managed by SaltStack.
  *
  * Field names are based on the SaltStack field names, expanded to avoid confusion.
+ *
+ * Items without annotation are assumed to be NonNull (default)
  */
+@DefaultQualifier(value = NonNull.class)
 public class User {
 
     /** User name */
@@ -74,7 +79,7 @@ public class User {
     private static final boolean DEFAULT_ABSENT_FORCE = false;
 
     /** The name of the user - must be unique */
-    private final @NonNull String name;
+    private final String name;
 
     /** Whether this user should exist; default true */
     private boolean present = true;
@@ -166,11 +171,11 @@ public class User {
     /** Groups that this user is a member of */
     private final List<String> groups = new ArrayList<>();
 
-    public User(@NonNull String name) {
+    public User(String name) {
         this.name = name;
     }
 
-    public @NonNull String getName() {
+    public String getName() {
         return name;
     }
 
@@ -194,7 +199,7 @@ public class User {
         return passwordPlain;
     }
 
-    public void setPasswordPlain(@NonNull String passwordPlain) {
+    public void setPasswordPlain(String passwordPlain) {
         this.passwordPlain = passwordPlain;
     }
 
@@ -406,7 +411,7 @@ public class User {
         this.absentForce = absentForce;
     }
 
-    public @NonNull List<String> getGroups() {
+    public List<String> getGroups() {
         return Collections.unmodifiableList(groups);
     }
 
@@ -504,8 +509,8 @@ public class User {
     /**
      * Adds a property to a sequence as required by Salt State structure.
      */
-    private void addProperty(@NonNull final List<Map<String, @Nullable Object>> seq,
-                             @NonNull final String key,
+    private void addProperty(final List<Map<String, @Nullable Object>> seq,
+                             final String key,
                              @Nullable final Object value) {
         final Map<String, @Nullable Object> map = new HashMap<>(1);
         map.put(key, value);
@@ -520,8 +525,8 @@ public class User {
      * @param key Key for value
      * @param value Value to add if it isn't null
      */
-    private void addIfNotNullOrEmpty(@NonNull final List<Map<String, @Nullable Object>> seq,
-                                     @NonNull final String key,
+    private void addIfNotNullOrEmpty(final List<Map<String, @Nullable Object>> seq,
+                                     final String key,
                                      @Nullable final Object value) {
         if (value != null) {
             if (value instanceof Collection) {
@@ -543,8 +548,8 @@ public class User {
      * @param value Value to add if it isn't the default value
      * @param defaultValue Default value to check against
      */
-    private void addIfNotDefault(@NonNull final List<Map<String, @Nullable Object>> seq,
-                                 @NonNull final String key,
+    private void addIfNotDefault(final List<Map<String, @Nullable Object>> seq,
+                                 final String key,
                                  final boolean value,
                                  final boolean defaultValue) {
         if (value != defaultValue) {
@@ -556,7 +561,7 @@ public class User {
      * Converts the contents into a map suitable for a Salt State entry.
      * @return The map of bean properties to create the entry for one user in a Salt State file (.sls)
      */
-    public @NonNull Map<String, List<Map<String, @Nullable Object>>> toStateMap() throws Exception {
+    public Map<String, List<Map<String, @Nullable Object>>> toStateMap() throws Exception {
 
         // Map of properties of this object, with the correct salt name as per
         // https://docs.saltstack.com/en/latest/ref/states/all/salt.states.user.html
@@ -634,7 +639,7 @@ public class User {
      * @return A map containing all the data to be used when serializing
      *         to disk.
      */
-    public @NonNull Map<String, @Nullable Object>  toPillarMap() {
+    public Map<String, @Nullable Object>  toPillarMap() {
         final Map<String, @Nullable Object> pillarMap = new HashMap<>();
 
         pillarMap.put(NAME, this.name);
@@ -696,7 +701,7 @@ public class User {
                 }
 
                 String key = entry.getKey().toString();
-                Object value = entry.getValue();
+                @Nullable Object value = entry.getValue();
 
                 try {
                     switch (key) {
@@ -788,7 +793,7 @@ public class User {
                     }
                 }
                 catch (ClassCastException e) {
-                    String type = null;
+                    @MonotonicNonNull String type = null;
                     if (value != null) {
                         type = value.getClass().getName();
                     }
@@ -804,11 +809,11 @@ public class User {
      * Constructs a bean from the contents of a series of maps.
      * @param pillarMap Map of properties to construct the state from
      */
-    public static @NonNull User fromPillarMap(@NonNull Map<Object, @Nullable Object> pillarMap)
+    public static User fromPillarMap(Map<Object, @Nullable Object> pillarMap)
             throws BadYamlException {
 
         // Find the user's name
-        Object oName = pillarMap.get(User.NAME);
+        @Nullable Object oName = pillarMap.get(User.NAME);
         if (oName == null) {
             throw new BadYamlException("No name for User in pillar data");
         }

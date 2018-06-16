@@ -4,6 +4,8 @@ import com.riverinnovations.saltui.model.BadYamlException;
 import com.riverinnovations.saltui.model.user.User;
 import com.riverinnovations.saltui.model.user.Users;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.framework.qual.DefaultQualifier;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
@@ -19,7 +21,10 @@ import java.util.Map;
 
 /**
  * Represents the user data stored in a Pillar.
+ *
+ * Items without annotation are assumed to be NonNull (default)
  */
+@DefaultQualifier(value = NonNull.class)
 public class UserState {
 
     /** The name of the file we want to manage for SaltStack State*/
@@ -42,8 +47,8 @@ public class UserState {
      *                       Must be readable and writable.
      *                       Parent directory must be readable and writable.
      */
-    public UserState(@NonNull Path stateFilePath,
-                     @NonNull Path pillarFilePath) {
+    public UserState(Path stateFilePath,
+                     Path pillarFilePath) {
         this.stateFilePath = stateFilePath;
         this.pillarFilePath = pillarFilePath;
     }
@@ -61,8 +66,11 @@ public class UserState {
 
             if (map != null) {
                 if (map.containsKey("users")) {
-                    Object oUsersMap = map.get("users");
-                    if (!(oUsersMap instanceof Map)) {
+                    @Nullable Object oUsersMap = map.get("users");
+                    if (oUsersMap == null) {
+                        throw new BadYamlException("Value of users key was null");
+                    }
+                    else if (!(oUsersMap instanceof Map)) {
                         throw new IOException("Cannot find users key in pillar");
                     }
                     else {

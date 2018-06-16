@@ -2,6 +2,7 @@ package com.riverinnovations.saltui.model.user;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.framework.qual.DefaultQualifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +11,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Represents the users managed by the system.
+ *
+ * Items without annotation are assumed to be NonNull (default)
  */
+@DefaultQualifier(value = NonNull.class)
 public class Users {
 
     /** Maps name to user */
@@ -37,7 +41,7 @@ public class Users {
      * Adds the user to the set of users.
      * @param user The user to add. Must not be null (IllegalArgumentException).
      */
-    public void addUser(@NonNull User user) {
+    public void addUser(User user) {
         this.userMap.put(user.getName(), user);
     }
 
@@ -53,7 +57,7 @@ public class Users {
     /**
      * Returns all the users.
      */
-    public @NonNull Collection<User> getUsers() {
+    public Collection<User> getUsers() {
         return this.userMap.values();
     }
 
@@ -61,7 +65,7 @@ public class Users {
      * Returns all the users in a structure suitable for conversion to YAML.
      * @return All the users as a structure of maps.
      */
-    public @NonNull Map<String, Map<String, List<Map<String, @Nullable Object>>>> getYamlState() throws Exception {
+    public Map<String, Map<String, List<Map<String, @Nullable Object>>>> getYamlState() throws Exception {
         Map<String, Map<String, List<Map<String, @Nullable Object>>>> usersMap = new HashMap<>();
 
         for (User u: this.userMap.values()) {
@@ -71,7 +75,7 @@ public class Users {
         return usersMap;
     }
 
-    public @NonNull Map<String, Map<String, Map<String, @Nullable Object>>> getYamlPillar() throws Exception {
+    public Map<String, Map<String, Map<String, @Nullable Object>>> getYamlPillar() throws Exception {
         Map<String, Map<String, @Nullable Object>> usersMap = new HashMap<>();
 
         for (User u: this.userMap.values()) {
@@ -88,7 +92,7 @@ public class Users {
      * Clears the existing contents of the map.
      * @param users The users to add to the map.
      */
-    public void setUsers(@NonNull Collection<User> users) {
+    public void setUsers(Collection<User> users) {
         this.userMap.clear();
         for (User u: users) {
             this.addUser(u);
