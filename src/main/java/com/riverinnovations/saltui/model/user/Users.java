@@ -1,6 +1,7 @@
 package com.riverinnovations.saltui.model.user;
 
 import com.riverinnovations.saltui.model.DuplicateNameException;
+import com.riverinnovations.saltui.model.UnknownUserException;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
@@ -33,13 +34,6 @@ public class Users {
     }
 
     /**
-     * Constructs a Users object from YAML.
-     */
-    //public Users(Map<String, ?> yamlData) {
-
-    //}
-
-    /**
      * Adds the user to the set of users.
      * @param user The user to add. Must not be null (IllegalArgumentException).
      */
@@ -49,6 +43,15 @@ public class Users {
         }
         else {
             this.userMap.put(user.getName(), user);
+        }
+    }
+
+    /**
+     * Deletes the user from the set of users.
+     */
+    public void deleteUser(String username) throws UnknownUserException {
+        if (this.userMap.remove(username) == null) {
+            throw new UnknownUserException("Cannot find user with name '" + username + "' to delete.");
         }
     }
 

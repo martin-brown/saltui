@@ -1,12 +1,14 @@
 package com.riverinnovations.saltui.model.yaml;
 
 import com.riverinnovations.saltui.model.BadYamlException;
-import com.riverinnovations.saltui.model.DuplicateNameException;
+import com.riverinnovations.saltui.model.ModelException;
 import com.riverinnovations.saltui.model.user.User;
 import com.riverinnovations.saltui.model.user.Users;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
+
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
@@ -58,7 +60,7 @@ public class UserState {
      * Loads a YAML file into memory.
      * @return A map of user name to User object.
      */
-    public Users load() throws IOException, BadYamlException, DuplicateNameException {
+    public Users load() throws IOException, ModelException {
         Users users = new Users();
 
         Yaml yaml = new Yaml(new SafeConstructor());

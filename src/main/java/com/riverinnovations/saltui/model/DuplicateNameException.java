@@ -3,7 +3,7 @@ package com.riverinnovations.saltui.model;
 /**
  * Exception thrown when two users have the same name.
  */
-public class DuplicateNameException extends Exception {
+public class DuplicateNameException extends ModelException {
     public DuplicateNameException(String s) {
         super(s);
     }

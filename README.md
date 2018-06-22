@@ -15,8 +15,6 @@ expire every 90 days.
 * Secure password encryption. 
 
 ## TODO
-* Need to tighten up User object construction so required properties are always present.
-* Need to tighten up Users object so User.name is always unique.
 * Proper unit testing.
 * Full use of Nullable / NonNull attributes
 * Thread safety and locking for concurrent updates of User/Users
