@@ -1,10 +1,14 @@
 package com.riverinnovations.saltui.model.user;
 
 import com.riverinnovations.saltui.model.BadYamlException;
+import com.riverinnovations.saltui.model.gpg.GpgEncryptionException;
+import com.riverinnovations.saltui.model.gpg.GpgEncryptor;
+
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -639,7 +643,9 @@ public class User {
      * @return A map containing all the data to be used when serializing
      *         to disk.
      */
-    public Map<String, @Nullable Object>  toPillarMap() {
+    public Map<String, @Nullable Object>  toPillarMap(GpgEncryptor gpgEncryptor)
+    throws GpgEncryptionException {
+
         final Map<String, @Nullable Object> pillarMap = new HashMap<>();
 
         pillarMap.put(NAME, this.name);
@@ -657,7 +663,7 @@ public class User {
         // Password handling
         pillarMap.put(HASH_PASSWORD, this.hashPassword);
         pillarMap.put(ENFORCE_PASSWORD, this.enforcePassword);
-        pillarMap.put(PASSWORD, this.passwordPlain);
+        pillarMap.put(PASSWORD, gpgEncryptor.encrypt(this.passwordPlain));
 
         // User's shell
         pillarMap.put(SHELL, this.shell);
@@ -734,6 +740,7 @@ public class User {
                             user.enforcePassword = (value == null ? DEFAULT_ENFORCE_PASSWORD : (Boolean) value);
                             break;
                         case PASSWORD:
+                            // TODO decide how to handle reading password in
                             user.passwordPlain = (String) value;
                         case SHELL:
                             user.shell = (String) value;

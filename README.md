@@ -118,6 +118,11 @@ It can be useful to be able to make groups of users members of other groups. Thi
 by adding virtual groups within the application, resolving the membership when creating the 
 YAML .sls file.
 
+# GPG Setup
+Details of configuring GPG for SaltStack can be found here: 
+https://fabianlee.org/2016/10/18/saltstack-keeping-salt-pillar-data-encrypted-using-gpg/
+
+
 Platform
 ========
 There were two candiate platforms for this project:

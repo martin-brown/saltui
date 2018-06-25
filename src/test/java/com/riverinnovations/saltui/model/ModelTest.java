@@ -39,8 +39,9 @@ public class ModelTest {
 
         Path statePath = Paths.get("target/test/userstate.yaml");
         Path pillarPath = Paths.get("target/test/userpillar.yaml");
+        Path gpgKeyPath = Paths.get("src/test/resources/gpg/pubring.gpg");
         Files.createDirectories(pillarPath.getParent());
-        UserState userState = new UserState(statePath, pillarPath);
+        UserState userState = new UserState(statePath, pillarPath, gpgKeyPath);
         userState.save(users);
 
         // Try to read them back in again

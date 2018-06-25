@@ -98,6 +98,13 @@
             <version>1.7.25</version>
         </dependency>
 
+        <!-- GPG implementation on top of Bouncy Castle -->
+        <dependency>
+            <groupId>org.c02e.jpgpj</groupId>
+            <artifactId>jpgpj</artifactId>
+            <version>0.4</version>
+        </dependency>
+
         <!-- Checker framework for code safety checking -->
         <!-- Annotations from the Checker Framework: nullness, interning, locking, ... -->
         <dependency>

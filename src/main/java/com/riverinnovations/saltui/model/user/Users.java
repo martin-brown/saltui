@@ -2,6 +2,8 @@ package com.riverinnovations.saltui.model.user;
 
 import com.riverinnovations.saltui.model.DuplicateNameException;
 import com.riverinnovations.saltui.model.UnknownUserException;
+import com.riverinnovations.saltui.model.gpg.GpgEncryptionException;
+import com.riverinnovations.saltui.model.gpg.GpgEncryptor;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.DefaultQualifier;
@@ -88,11 +90,13 @@ public class Users {
      * Returns all the users in a structure suitable for conversion to YAML for a Salt Pillar.
      * @return All the users as a structure of maps.
      */
-    public Map<String, Map<String, Map<String, @Nullable Object>>> getYamlPillar() {
+    public Map<String, Map<String, Map<String, @Nullable Object>>> getYamlPillar(GpgEncryptor encryptor)
+    throws GpgEncryptionException {
+
         Map<String, Map<String, @Nullable Object>> usersMap = new HashMap<>();
 
         for (User u: this.userMap.values()) {
-            usersMap.put(u.getName(), u.toPillarMap());
+            usersMap.put(u.getName(), u.toPillarMap(encryptor));
         }
 
         Map<String, Map<String, Map<String, @Nullable Object>>> pillarMap = new HashMap<>();

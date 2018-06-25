@@ -2,6 +2,7 @@ package com.riverinnovations.saltui.model.yaml;
 
 import com.riverinnovations.saltui.model.BadYamlException;
 import com.riverinnovations.saltui.model.ModelException;
+import com.riverinnovations.saltui.model.gpg.GpgEncryptor;
 import com.riverinnovations.saltui.model.user.User;
 import com.riverinnovations.saltui.model.user.Users;
 
@@ -36,7 +37,8 @@ public class UserState {
     /** The name of the pillar file that holds all the data */
     private final Path pillarFilePath;
 
-    /**
+    /** The name of the GPG key file */
+    private final Path gpgKeyFilePath;
 
     /**
      * Constructor.
@@ -49,11 +51,16 @@ public class UserState {
      *                       Must not be null.
      *                       Must be readable and writable.
      *                       Parent directory must be readable and writable.
+     * @param gpgKeyFilePath The path to the file holding the GPG public key
+     *                       to encrypt sensitive data.
+     *                       Must not be null.
      */
     public UserState(Path stateFilePath,
-                     Path pillarFilePath) {
+                     Path pillarFilePath,
+                     Path gpgKeyFilePath) {
         this.stateFilePath = stateFilePath;
         this.pillarFilePath = pillarFilePath;
+        this.gpgKeyFilePath = gpgKeyFilePath;
     }
 
     /**
@@ -123,6 +130,9 @@ public class UserState {
         dumperOptions.setDefaultScalarStyle(DumperOptions.ScalarStyle.DOUBLE_QUOTED);
         // TODO - always quote strings to avoid parsing numeric data incorrectly!
 
+        // Encryption settings
+        GpgEncryptor encryptor = new GpgEncryptor(this.gpgKeyFilePath);
+
         Yaml yaml = new Yaml(dumperOptions);
         try (Writer w = Files.newBufferedWriter(stateFilePath,
                 StandardCharsets.UTF_8,
@@ -135,7 +145,7 @@ public class UserState {
                                                 StandardCharsets.UTF_8,
                                                 StandardOpenOption.CREATE,
                                                 StandardOpenOption.TRUNCATE_EXISTING)) {
-            yaml.dump(users.getYamlPillar(), w);
+            yaml.dump(users.getYamlPillar(encryptor), w);
         }
     }
 
