@@ -9,14 +9,19 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.router.Route;
 import org.checkerframework.checker.nullness.qual.Nullable;
+
+import java.text.NumberFormat;
 
 /**
  * The main view contains a button and a click listener.
  */
 @Route("")
 public class MainView extends VerticalLayout {
+
+    private static final String NULL_REP_EMPTY_STRING = "";
 
     public MainView() {
         super();
@@ -36,12 +41,29 @@ public class MainView extends VerticalLayout {
         }
     }
 
+    /**
+     * Utility method to add columns to the grid.
+     * Seprated out so that warnings can be suppressed for nullable return value from
+     * user bean into null-allowed value in number renderer.
+     * @param grid The grid to add columns to.
+     */
+    @SuppressWarnings("methodref.return.invalid")
+    private void addColumns(Grid<User> grid) {
+        grid.addColumn(User::getName).setHeader("User Name");
+        grid.addColumn(user -> user.getGecosFullname() == null ? "" : user.getGecosFullname()).setHeader("Full Name");
+        grid.addColumn(new NumberRenderer<>(User::getUid,
+                NumberFormat.getIntegerInstance(),
+                NULL_REP_EMPTY_STRING))
+                .setHeader("UID");
+        grid.addColumn(new NumberRenderer<>(User::getGid,
+                NumberFormat.getIntegerInstance(),
+                NULL_REP_EMPTY_STRING))
+                .setHeader("GID");
+    }
+
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        Button button = new Button("Click me");
-        button.addClickListener(event -> Notification.show("Clicked!"));
-        add(button);
 
         // Create some users
         Users users = new Users();
@@ -62,12 +84,17 @@ public class MainView extends VerticalLayout {
         Grid<User> grid = new Grid<>();
         grid.setSizeFull();
         grid.setItems(users.getUsers());
-        grid.addColumn(User::getName).setHeader("User Name");
-        grid.addColumn(user -> user.getGecosFullname() == null ? "" : user.getGecosFullname()).setHeader("Full Name");
-        grid.addColumn(user -> this.toString(user.getUid())).setHeader("UID");
-        grid.addColumn(user -> this.toString(user.getGid())).setHeader("GID");
+        this.addColumns(grid);
         add(grid);
         setHeight("100vh");
+
+        // Selection listener
+        grid.addSelectionListener(event -> {
+            if (event.getFirstSelectedItem().isPresent()) {
+                User selected = event.getFirstSelectedItem().get();
+                Notification.show("Selected " + selected.getName());
+            }
+        });
     }
 }
 

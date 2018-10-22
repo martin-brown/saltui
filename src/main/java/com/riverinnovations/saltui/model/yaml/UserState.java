@@ -64,6 +64,26 @@ public class UserState {
     }
 
     /**
+     * Casts the object to a users map.
+     * @param oUsersMap Object holding users map.
+     * @return Map.
+     */
+    @SuppressWarnings("unchecked")
+    private Map<@Nullable Object, @Nullable Object> castObjectToUsersMap(Object oUsersMap) {
+        return (Map<@Nullable Object, @Nullable Object>)oUsersMap;
+    }
+
+    /**
+     * Casts the object to a user map.
+     * @param oUserMap Object holding user map.
+     * @return Map.
+     */
+    @SuppressWarnings("unchecked")
+    private Map<@Nullable Object, @Nullable Object> castObjectToUserMap(Object oUserMap){
+        return (Map<@Nullable Object, @Nullable Object>) oUserMap;
+    }
+
+    /**
      * Loads a YAML file into memory.
      * @return A map of user name to User object.
      */
@@ -84,7 +104,7 @@ public class UserState {
                         throw new BadYamlException("Cannot find users map in pillar");
                     }
                     else {
-                        Map<@Nullable Object, @Nullable Object> usersMap = (Map<@Nullable Object, @Nullable Object>) oUsersMap;
+                        Map<@Nullable Object, @Nullable Object> usersMap = this.castObjectToUsersMap(oUsersMap);
 
                         for (Map.Entry<@Nullable Object, @Nullable Object> usersEntry : usersMap.entrySet()) {
                             @Nullable Object oName = usersEntry.getKey();
@@ -99,7 +119,7 @@ public class UserState {
                                     throw new IOException("Value for user '" + name + " is not Map");
                                 }
                                 else {
-                                    Map<@Nullable Object, @Nullable Object> userMap = (Map<@Nullable Object, @Nullable Object>) value;
+                                    Map<@Nullable Object, @Nullable Object> userMap = this.castObjectToUserMap(value);
                                     User user = User.fromPillarMap(userMap);
                                     users.addUser(user);
                                 }
